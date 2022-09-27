@@ -14,4 +14,4 @@ web-build/
 .DS_Store
 
 # custom files
-..open in vs code.bat
+/..open in vs code.bat
