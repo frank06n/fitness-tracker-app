@@ -19,7 +19,7 @@ const Btn_LogScreen = () => (
 function App() {
 	return (
 		<NavigationContainer>
-			<Stack.Navigator initialRouteName="Temp">
+			<Stack.Navigator initialRouteName="Home">
 				<Stack.Screen name="Home" component={HomeScreen} options={{ headerRight: Btn_LogScreen }} />
 				<Stack.Screen name="Run" component={RunScreen} />
 				<Stack.Screen name="Temp" component={TempScreen} />

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/WrathChaos/react-native-bouncy-checkbox
-import ModalDropdown from "../components/ModalDropdown";
+import DropdownComponent from "../components/Dropdown";
 
 
 function useForceUpdate() {
@@ -16,14 +16,18 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
     },
+    grp_1: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
     exercise_label: {
-        fontSize: 16,
-        marginBottom: -6
+        fontSize: 16
     },
     time_display: {
         flexDirection: 'row',
         backgroundColor: '#fff',
-        borderRadius: 8,
+        borderBottomLeftRadius: 8, borderBottomRightRadius: 8,
         elevation: 2,
         marginVertical: 10,
         paddingVertical: 8
@@ -33,28 +37,46 @@ const styles = StyleSheet.create({
 const RunScreen = () => {
     const forceUpdate = useForceUpdate();
 
-    const [selected, setSelected] = useState("");
-
 
     const data = [
-        'Walk', 'Run', 'Pushups', 'Pullups', 'Squats', 'Jumping Jacks', 'Item 7', 'Item 8'
+        'Walk', 'Run', 'Jumping Jacks', 'Skipping',
+        'Pushups', 'Pullups', 'Squats', 'Lunges',
     ];
+    for (let i = 0; i < data.length; i++) {
+        data[i] = { label: data[i], value: i.toString() };
+    }
+
     return (
         <View style={styles.container}>
-            <Text style={styles.exercise_label}>{'Exercise'}</Text>
-            <ModalDropdown
-                options={data}
-                style={{ marginBottom: 10 }}
-                textStyle={{ fontSize: 32 }}
-                isFullWidth
-                dropdownStyle={{ padding: 4, margin: 0 }}
-                dropdownTextStyle={{ fontSize: 14 }}
-            //showSearch
+            <View style={styles.grp_1}>
+                <Text style={styles.exercise_label}>{'Exercise'}</Text>
+                <Text style={styles.start_time}>{'9:32am'}</Text>
+            </View>
+            <DropdownComponent
+                label="Select Exercise" data={data} onSelect={() => { }}
+                style={{
+                    backgroundColor: '#fff',
+                    padding: 12,
+                    paddingHorizontal: 20,
+                    elevation: 2,
+                    borderTopLeftRadius: 6, borderTopRightRadius: 6,
+                    marginTop: 10,
+                }}
+                textStyle={{
+                    fontSize: 26,
+                    marginTop: -4,
+                }}
+                overlayStyle={{
+                    alignItems: 'center', backgroundColor: '#2222'
+                }}
+                dropdownStyle={{
+                    borderBottomLeftRadius: 6, borderBottomRightRadius: 6,
+                }}
             />
             <View style={styles.time_display}>
                 <View style={{
                     flex: 1,
-                    borderRightWidth: 1,
+                    borderRightWidth: 0.9, borderColor: '#888',
                     paddingHorizontal: 25
                 }}>
                     <BouncyCheckbox

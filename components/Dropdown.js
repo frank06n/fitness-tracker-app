@@ -1,81 +1,123 @@
 import React, { useRef, useState } from 'react';
-import { View, FlatList, Modal, StyleSheet, Text, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, FlatList, Modal, StyleSheet, Text, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
 // https://blog.logrocket.com/creating-custom-react-native-dropdown/
 
-const Dropdown = ({ label, data, onSelect }) => {
+const DDSearch = ({ customStyle, placeholder, searchTerm, setSearchTerm }) => {
+    return <TextInput
+        style={[styles.search, customStyle]}
+        placeholder={placeholder}
+        value={searchTerm}
+        onChangeText={(text) => {
+            setSearchTerm(text);
+        }}
+    />;
+}
+
+const DDItem = ({ index, item, displayData, customStyle, customTextStyle, onPress }) => {
+    const mstyle = [styles.item];
+    if (displayData.length == index + 1) mstyle.push({ borderBottomWidth: 0 });
+    if (customStyle) mstyle.push(customStyle);
+
+    return <TouchableOpacity style={mstyle} onPress={() => onPress(item)}>
+        <Text style={customTextStyle}>{item.label}</Text>
+    </TouchableOpacity>
+};
+
+const Dropdown = ({ onPressOutside, data, onSelect, customStyle, overlayStyle, searchStyle, itemStyle, itemTextStyle }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const displayData = data.filter((item) => item.label.toLowerCase().startsWith(searchTerm.toLowerCase()));
+
+    return (
+        <Modal visible={true} transparent animationType="fade">
+            <TouchableOpacity
+                style={[styles.overlay, overlayStyle]}
+                onPress={onPressOutside}
+            >
+                <View style={[styles.dropdown, customStyle]}>
+                    <DDSearch
+                        placeholder={'Search exercise'}
+                        customStyle={searchStyle}
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                    />
+                    <FlatList
+                        data={displayData}
+                        renderItem={({ item, index }) => DDItem({
+                            item: item,
+                            index: index,
+                            displayData: displayData,
+                            customStyle: itemStyle,
+                            customTextStyle: itemTextStyle,
+                            onPress: onSelect
+                        })}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+            </TouchableOpacity>
+        </Modal>
+    );
+};
+
+
+const DropdownComponent = (props) => {
+    const {
+        label,
+        data,
+        onSelect,
+        icon,
+        style,
+        textStyle,
+        overlayStyle,
+        dropdownStyle,
+        searchStyle,
+        itemStyle,
+        itemTextStyle
+    } = props;
 
     const [visible, setVisible] = useState(false);
     const [selected, setSelected] = useState(undefined);
 
-    const [dropdownTop, setDropdownTop] = useState(0);
-    const DropdownButton = useRef();
+    const [ddTop, set_ddTop] = useState(0);
+    const [ddWidth, set_ddWidth] = useState('100%');
+    const Self = useRef();
 
     const toggleDropdown = () => visible ? setVisible(false) : openDropdown();
 
     const openDropdown = () => {
-        DropdownButton.current.measure((_fx, _fy, _w, h, _px, py) => {
-            setDropdownTop(py + h - 36.33);
+        Self.current.measure((_fx, _fy, w, h, _px, py) => {
+            set_ddTop(py + h - 36.33);
+            set_ddWidth(w);
         });
         setVisible(true);
     };
 
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const displayData = data.filter((item) => item.label.toLowerCase().startsWith(searchTerm.toLowerCase()));
-
-    const renderItem = ({ index, item }) => {
-        const mstyle = displayData.length == index + 1 ? [styles.item, { borderBottomWidth: 0 }] : styles.item;
-
-        return <TouchableOpacity style={mstyle}
-            onPress={() => onItemPress(item)}
-        >
-            <Text>{item.label}</Text>
-        </TouchableOpacity>
-    };
-
-    const onItemPress = (item) => {
-        setSelected(item);
-        onSelect(item);
-        setVisible(false);
-    };
-
-
-
-    const renderDropdown = () => {
-        return (
-            <Modal visible={visible} transparent animationType="fade">
-                <TouchableOpacity
-                    style={styles.overlay}
-                    onPress={() => setVisible(false)}
-                >
-                    <View style={[styles.dropdown, { top: dropdownTop }]}>
-                        <TextInput
-                            style={styles.search}
-                            placeholder="Search 'xyz' here"
-                            value={searchTerm}
-                            onChangeText={(text) => {
-                                setSearchTerm(text);
-                            }}
-                        />
-                        <FlatList
-                            data={displayData}
-                            renderItem={renderItem}
-                            keyExtractor={(item, index) => index.toString()}
-                        />
-                    </View>
-                </TouchableOpacity>
-            </Modal>
-        );
-    };
-
     return <TouchableOpacity
-        ref={DropdownButton}
-        style={styles.button}
+        ref={Self}
+        style={[styles.button, style]}
         onPress={toggleDropdown}
     >
-        {renderDropdown()}
-        <Text style={styles.buttonText}>{selected ? selected.label : label}</Text>
-        <Image style={{ width: 20, height: 20 }} source={{ uri: 'https://www.iconpacks.net/icons/2/free-arrow-down-icon-3101-thumb.png' }} />
+        {
+            visible &&
+            <Dropdown
+                onPressOutside={toggleDropdown}
+                data={data}
+                onSelect={(item) => {
+                    setSelected(item);
+                    onSelect(item);
+                    setVisible(false);
+                }}
+                customStyle={[{ top: ddTop, width: ddWidth }, dropdownStyle]}
+                overlayStyle={overlayStyle}
+                searchStyle={searchStyle}
+                itemStyle={itemStyle}
+                itemTextStyle={itemTextStyle}
+            />
+        }
+        <Text style={[styles.buttonText, textStyle]}>{selected ? selected.label : label}</Text>
+        {
+            icon ? icon :
+                <Image style={{ width: 20, height: 20 }} source={{ uri: 'https://www.iconpacks.net/icons/2/free-arrow-down-icon-3101-thumb.png' }} />
+        }
     </TouchableOpacity >;
 }
 
@@ -83,27 +125,18 @@ const styles = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#ddf',
-        height: 50,
-        width: '90%',
-        paddingHorizontal: 10,
-        zIndex: 1,
     },
     buttonText: {
         flex: 1,
-        textAlign: 'center',
     },
     overlay: {
-        width: '100%', height: '100%', alignItems: 'center'
+        width: '100%', height: '100%'
     },
     dropdown: {
         position: 'absolute',
         backgroundColor: '#fff',
-        width: 324,
         maxHeight: 200,
         paddingHorizontal: 12,
-        borderWidth: 0.8, borderColor: '#ddd',
-        borderRadius: 3,
     },
     search: {
         paddingVertical: 4, paddingHorizontal: 8,
@@ -118,4 +151,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Dropdown;
+export default DropdownComponent;
