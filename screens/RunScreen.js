@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput } from "react-native";
+import { useState, useEffect, Component, useRef } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/WrathChaos/react-native-bouncy-checkbox
 import DropdownComponent from "../components/Dropdown";
+import StopWatch from "../components/StopWatch";
 
 
 function useForceUpdate() {
@@ -12,35 +13,107 @@ function useForceUpdate() {
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 10,
-    },
-    grp_1: {
+    container: { flex: 1, padding: 10, },
+    grp_start_time: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    exercise_label: {
-        fontSize: 16
-    },
-    time_display: {
+    start_time_label: { fontSize: 16 },
+    start_time_txt: { fontSize: 16 },
+    grp_time_display: {
         flexDirection: 'row',
         backgroundColor: '#fff',
         borderBottomLeftRadius: 8, borderBottomRightRadius: 8,
         elevation: 2,
         marginVertical: 10,
-        paddingVertical: 8
+        paddingVertical: 12
+    },
+    timer_button: {
+        backgroundColor: '#fff',
+        width: 80,
+        height: 50,
+        borderRadius: 16,
+        alignItems: "center",
+        justifyContent: 'center',
+        alignSelf: 'center',
+        elevation: 2,
+    },
+    reps_input: {
+        backgroundColor: '#fff',
+        borderRadius: 6,
+        elevation: 2,
+        paddingHorizontal: 8, paddingVertical: 4,
+        marginTop: 10
+    },
+    notes_input: {
+        backgroundColor: '#fff',
+        borderRadius: 6,
+        elevation: 2,
+        paddingHorizontal: 8, paddingVertical: 4,
+        marginTop: 10,
+        height: 60,
+        textAlignVertical: 'top'
+    },
+    grp_action: {
+        flexDirection: 'row',
+        marginTop: 30,
+        justifyContent: 'center'
+    },
+    action_btn: {
+        backgroundColor: '#222',
+        marginHorizontal: 10,
+        width: '30%',
+        padding: 10,
+        borderRadius: 6,
+        alignItems: 'center'
+    },
+    action_btn_text: {
+        color: '#f2f2f2', fontSize: 16
     }
 });
+
+const TimeDisplay = ({ label, timerOn, extraStyle, onCheck }) => {
+    const [hideChecked, setHideChecked] = useState(false);
+    return <View
+        style={[{ flex: 1, paddingHorizontal: 10, }, extraStyle]}
+        opacity={hideChecked ? 0.3 : 1}
+    >
+        <BouncyCheckbox
+            size={20}
+            fillColor="black"
+            text="Hide"
+            style={{ paddingHorizontal: 10, paddingVertical: 6, alignSelf: 'stretch', borderRadius: 4, borderWidth: 0.5, borderColor: '#555', marginBottom: 8 }}
+            iconStyle={{ borderColor: '#000' }}
+            textStyle={{ color: '#000', fontSize: 18, textAlign: 'center' }}
+            onPress={(checked) => {
+                setHideChecked(checked);
+                if (onCheck) onCheck(checked);
+            }}
+        />
+        <Text style={{ fontSize: 16, paddingLeft: 10 }}>{label}</Text>
+        <StopWatch
+            start={timerOn}
+            style={{ fontSize: 26, paddingLeft: 10 }}
+        />
+    </View>;
+}
 
 const RunScreen = () => {
     const forceUpdate = useForceUpdate();
 
+    const [totalTimerOn, setTotalTimerOn] = useState(false);
+    const [workTimerOn, setWorkTimerOn] = useState(false);
+
+    const ic_play_src = { uri: 'https://cdn.icon-icons.com/icons2/2226/PNG/512/play_icon_134504.png' };
+    const ic_pause_src = { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-pause-512.png' }
 
     const data = [
         'Walk', 'Run', 'Jumping Jacks', 'Skipping',
         'Pushups', 'Pullups', 'Squats', 'Lunges',
+        'Burpees', 'Situps', 'Crunches', 'Russian Twists',
+        'Tricep Extensions', 'Tricep Dips', 'Bicep Curls', 'Benchpress',
+        'Hamstring Curls', 'Calf Raises',
     ];
     for (let i = 0; i < data.length; i++) {
         data[i] = { label: data[i], value: i.toString() };
@@ -48,8 +121,8 @@ const RunScreen = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.grp_1}>
-                <Text style={styles.exercise_label}>{'Exercise'}</Text>
+            <View style={styles.grp_start_time}>
+                <Text style={styles.start_time_label}>{'Start time:'}</Text>
                 <Text style={styles.start_time}>{'9:32am'}</Text>
             </View>
             <DropdownComponent
@@ -71,106 +144,41 @@ const RunScreen = () => {
                 }}
                 dropdownStyle={{
                     borderBottomLeftRadius: 6, borderBottomRightRadius: 6,
+                    maxHeight: 400
                 }}
             />
-            <View style={styles.time_display}>
-                <View style={{
-                    flex: 1,
-                    borderRightWidth: 0.9, borderColor: '#888',
-                    paddingHorizontal: 25
-                }}>
-                    <BouncyCheckbox
-                        size={16}
-                        fillColor="black"
-                        unfillColor="#FFFFFF"
-                        text="Hide"
-                        style={{ padding: 2 }}
-                        iconStyle={{ borderColor: '#000', borderRadius: 6 }}
-                        innerIconStyle={{ borderWidth: 1, borderRadius: 6 }}
-                        textStyle={{ color: '#000', marginLeft: -6, fontSize: 12 }}
-                    //onPress={(isChecked: boolean) => {}}
-                    />
-                    <Text>{"Total time"}</Text>
-                    <Text>{"03:08"}</Text>
-                </View>
-                <View style={{
-                    flex: 1,
-                    paddingHorizontal: 25
-                }}>
-                    <BouncyCheckbox
-                        size={16}
-                        fillColor="black"
-                        unfillColor="#FFFFFF"
-                        text="Hide"
-                        style={{ padding: 2 }}
-                        iconStyle={{ borderColor: '#000', borderRadius: 6 }}
-                        innerIconStyle={{ borderWidth: 1, borderRadius: 6 }}
-                        textStyle={{ color: '#000', marginLeft: -6, fontSize: 12 }}
-                    //onPress={(isChecked: boolean) => {}}
-                    />
-                    <Text>{"Work time"}</Text>
-                    <Text>{"02:40"}</Text>
-                </View>
+            <View style={styles.grp_time_display}>
+                <TimeDisplay
+                    label='Total time'
+                    timerOn={totalTimerOn}
+                    extraStyle={{ borderRightWidth: 0.9, borderColor: '#888' }}
+                />
+                <TimeDisplay
+                    label='Work time'
+                    timerOn={workTimerOn}
+                />
             </View>
-            <TouchableOpacity style={{
-                backgroundColor: '#fff',
-                width: 80,
-                height: 50,
-                borderRadius: 16,
-                alignItems: "center",
-                justifyContent: 'center',
-                alignSelf: 'center',
-                elevation: 3,
+            <TouchableOpacity style={styles.timer_button} onPress={() => {
+                if (!totalTimerOn) setTotalTimerOn(true);
+                setWorkTimerOn(!workTimerOn);
             }}>
-                <Image style={{ width: 30, height: 30, elevation: 3 }} source={{ uri: 'https://cdn-icons-png.flaticon.com/512/0/375.png' }} />
+                <Image style={{ width: 30, height: 30, elevation: 3 }} source={workTimerOn ? ic_pause_src : ic_play_src} />
             </TouchableOpacity>
             <TextInput
                 placeholder="Enter your reps (optional)"
-                style={{
-                    backgroundColor: '#fff',
-                    borderRadius: 6,
-                    elevation: 2,
-                    paddingHorizontal: 8, paddingVertical: 4,
-                    marginTop: 10
-                }}
+                style={styles.reps_input}
             />
             <TextInput
                 placeholder="Enter your notes (optional)"
                 multiline={true}
-                style={{
-                    backgroundColor: '#fff',
-                    borderRadius: 6,
-                    elevation: 2,
-                    paddingHorizontal: 8, paddingVertical: 4,
-                    marginTop: 10,
-                    height: 60,
-                    textAlignVertical: 'top'
-                }}
+                style={styles.notes_input}
             />
-            <View style={{
-                flexDirection: 'row',
-                marginTop: 30,
-                justifyContent: 'center'
-            }}>
-                <TouchableOpacity style={{
-                    backgroundColor: '#222',
-                    marginRight: 10,
-                    width: '30%',
-                    padding: 10,
-                    borderRadius: 6,
-                    alignItems: 'center'
-                }}>
-                    <Text style={{ color: '#f2f2f2', fontSize: 16 }}>{'CANCEL'}</Text>
+            <View style={styles.grp_action}>
+                <TouchableOpacity style={styles.action_btn}>
+                    <Text style={styles.action_btn_text}>{'CANCEL'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{
-                    backgroundColor: '#222',
-                    marginLeft: 10,
-                    width: '30%',
-                    padding: 10,
-                    borderRadius: 6,
-                    alignItems: 'center'
-                }}>
-                    <Text style={{ color: '#f2f2f2', fontSize: 16 }}>{'SAVE'}</Text>
+                <TouchableOpacity style={styles.action_btn}>
+                    <Text style={styles.action_btn_text}>{'SAVE'}</Text>
                 </TouchableOpacity>
             </View>
         </View>
