@@ -3,14 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button } fr
 import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/WrathChaos/react-native-bouncy-checkbox
 import DropdownComponent from "../components/Dropdown";
 import StopWatch from "../components/StopWatch";
-
-
-function useForceUpdate() {
-    const [value, setValue] = useState(0);
-    return () => setValue(value => value + 1); // update state to force render
-
-}
-
+import { getCurrentTime } from "../Utils";
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 10, },
@@ -100,8 +93,6 @@ const TimeDisplay = ({ label, timerOn, extraStyle, onCheck }) => {
 }
 
 const RunScreen = () => {
-    const forceUpdate = useForceUpdate();
-
     const [totalTimerOn, setTotalTimerOn] = useState(false);
     const [workTimerOn, setWorkTimerOn] = useState(false);
 
@@ -119,14 +110,23 @@ const RunScreen = () => {
         data[i] = { label: data[i], value: i.toString() };
     }
 
+    const [exername, setExername] = useState(undefined);
+    const [startTime, _setStartTime] = useState(getCurrentTime());
+    const [totalTime, setTotalTime] = useState(0);
+    const [workTime, setWorkTime] = useState(0);
+    const [hideTotalTime, setHideTotalTime] = useState(false);
+    const [hideWorkTime, setHideWorkTime] = useState(false);
+    const [repcount, setRepcount] = useState('');
+    const [notes, setNotes] = useState('');
+
     return (
         <View style={styles.container}>
             <View style={styles.grp_start_time}>
                 <Text style={styles.start_time_label}>{'Start time:'}</Text>
-                <Text style={styles.start_time}>{'9:32am'}</Text>
+                <Text style={styles.start_time}>{startTime}</Text>
             </View>
             <DropdownComponent
-                label="Select Exercise" data={data} onSelect={() => { }}
+                label="Select Exercise" data={data} onSelect={(item) => { setExername(item.label) }}
                 style={{
                     backgroundColor: '#fff',
                     padding: 12,
@@ -152,10 +152,14 @@ const RunScreen = () => {
                     label='Total time'
                     timerOn={totalTimerOn}
                     extraStyle={{ borderRightWidth: 0.9, borderColor: '#888' }}
+                    setTime={setTotalTime}
+                    onCheck={setHideTotalTime}
                 />
                 <TimeDisplay
                     label='Work time'
                     timerOn={workTimerOn}
+                    setTime={setWorkTime}
+                    onCheck={setHideWorkTime}
                 />
             </View>
             <TouchableOpacity style={styles.timer_button} onPress={() => {
@@ -167,17 +171,26 @@ const RunScreen = () => {
             <TextInput
                 placeholder="Enter your reps (optional)"
                 style={styles.reps_input}
+                onChangeText={text => setRepcount(text)}
+                value={repcount}
             />
             <TextInput
                 placeholder="Enter your notes (optional)"
                 multiline={true}
                 style={styles.notes_input}
+                onChangeText={text => setNotes(text)}
+                value={notes}
             />
             <View style={styles.grp_action}>
                 <TouchableOpacity style={styles.action_btn}>
                     <Text style={styles.action_btn_text}>{'CANCEL'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.action_btn}>
+                <TouchableOpacity style={styles.action_btn} onPress={() => {
+                    console.log(exername, startTime, totalTime, workTime, hideTotalTime, hideWorkTime, repcount, notes);
+                    //totalTimw workTime not updating, see issue
+                    // validate repcount
+                    // pass back to main menu and back n forth
+                }}>
                     <Text style={styles.action_btn_text}>{'SAVE'}</Text>
                 </TouchableOpacity>
             </View>

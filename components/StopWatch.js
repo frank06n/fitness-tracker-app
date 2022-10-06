@@ -16,6 +16,7 @@ class StopWatch extends Component {
         reset: PropTypes.bool,
         style: PropTypes.object,
         startTime: PropTypes.number,
+        setTime: PropTypes.func,
     }
 
     constructor(props) {
@@ -64,8 +65,10 @@ class StopWatch extends Component {
         });
 
         this.interval = this.interval ? this.interval : setInterval(() => {
-            this.setState({ elapsed: new Date() - this.state.initial });
-        }, 1);
+            const newElapsed = new Date() - this.state.initial;
+            this.setState({ elapsed: newElapsed });
+            if (this.props.setTime) this.props.setTime(newElapsed);
+        }, 100);
     }
 
     pause() {

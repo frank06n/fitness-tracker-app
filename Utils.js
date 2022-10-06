@@ -6,8 +6,8 @@ const createNewTask = (exercise_name, start_time) => {
         start_time: st,//start_time,
         total_time: 0,
         work_time: 0,
-        show_total_time: true,
-        show_work_time: true,
+        hide_total_time: false,
+        hide_work_time: false,
         rep_count: '3x14',
         notes: 'Aaa asbas this is a note'
     };
@@ -29,4 +29,12 @@ const createNewGoal = (exercise_name) => {
     };
 };
 
-export { createNewTask, GoalType, createNewGoal }
+const getCurrentTime = () => {
+    const d = new Date()
+    const h = d.getHours();
+    const m = d.getMinutes();
+    const hm = h * 60 + m;
+    return (h > 12 ? h - 12 : h) + ':' + (m < 10 ? '0' : '') + m + (hm >= 720 ? ' pm' : ' am');
+}
+
+export { createNewTask, GoalType, createNewGoal, getCurrentTime }

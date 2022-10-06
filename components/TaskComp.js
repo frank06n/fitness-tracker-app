@@ -5,12 +5,12 @@ import { Menu, MenuItem } from "react-native-material-menu";
 
 
 const tf = (x) => {
-    const m = Math.floor(x/60);
-    const s = x%60;
-    return m+':'+(s<10?'0':'')+s;
+    const m = Math.floor(x / 60);
+    const s = x % 60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
 }
 const tf2 = (x) => {
-    return (x>=720) ? tf(x-720)+'pm' : tf(x)+'am'; 
+    return (x >= 720) ? tf(x - 720) + 'pm' : tf(x) + 'am';
 }
 
 const styles = StyleSheet.create({
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
 
-        marginHorizontal:16,
+        marginHorizontal: 16,
         marginVertical: 4,
 
         borderRadius: 5,
@@ -26,33 +26,33 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     firstRow: {
-        flexDirection:'row',
-        justifyContent:'flex-start',
-        marginBottom:10,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        marginBottom: 10,
     },
     exercise_name: {
-        flex:1,
-        fontSize:18,
+        flex: 1,
+        fontSize: 18,
     },
     start_time: {
-        textAlignVertical:'center',
+        textAlignVertical: 'center',
         marginRight: 5
     },
     editBtn_img: {
-        width: 15, height: 15, margin:5
+        width: 15, height: 15, margin: 5
     },
     secondRow: {
-        flexDirection:'row',
+        flexDirection: 'row',
         justifyContent: 'space-between',
         marginRight: 12, marginLeft: 6,
     },
     secondRow_item: {
-        fontSize:12
+        fontSize: 12
     },
-    notesText:{
+    notesText: {
         fontSize: 12,
         backgroundColor: '#f0f0f0',
-        marginRight: 10, marginLeft: 4, marginTop:12,
+        marginRight: 10, marginLeft: 4, marginTop: 12,
         borderRadius: 6,
         paddingHorizontal: 6, paddingVertical: 4
     }
@@ -79,9 +79,9 @@ const TaskComp = ({ task, editor }) => {
 
     const editBtn = (
         <TouchableOpacity onPress={showMenu}>
-            <Image 
+            <Image
                 style={styles.editBtn_img}
-                source={{uri:'https://cdn-icons-png.flaticon.com/512/61/61140.png'}}
+                source={{ uri: 'https://cdn-icons-png.flaticon.com/512/61/61140.png' }}
             />
         </TouchableOpacity>
     );
@@ -92,23 +92,23 @@ const TaskComp = ({ task, editor }) => {
             onRequestClose={hideMenu}
             anchor={editBtn}
         >
-        <MenuItem onPress={hideMenu}>Edit</MenuItem>
-        <MenuItem onPress={deleteTask}>Delete</MenuItem>
-        <MenuItem onPress={toggleNotes}>{notesVis?'Hide Notes':'Show Notes'}</MenuItem>
+            <MenuItem onPress={hideMenu}>Edit</MenuItem>
+            <MenuItem onPress={deleteTask}>Delete</MenuItem>
+            <MenuItem onPress={toggleNotes}>{notesVis ? 'Hide Notes' : 'Show Notes'}</MenuItem>
         </Menu>
     );
 
     const condit = (check, style, text) => (check ?
         <Text style={style}>{text}</Text> : undefined
     );
-    
+
     const totalTime = condit(
-        task.show_total_time,
+        !task.hide_total_time,
         styles.secondRow_item,
         'Total: ' + tf(task.total_time)
     );
     const workTime = condit(
-        task.show_work_time,
+        !task.hide_work_time,
         styles.secondRow_item,
         'Work: ' + tf(task.work_time)
     );
