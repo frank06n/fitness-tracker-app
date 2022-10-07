@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button } fr
 import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/WrathChaos/react-native-bouncy-checkbox
 import DropdownComponent from "../components/Dropdown";
 import StopWatch from "../components/StopWatch";
-import { getCurrentTime } from "../Utils";
+import { getCurrentTime, repcountFormat } from "../Utils";
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 10, },
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const TimeDisplay = ({ label, timerOn, extraStyle, onCheck }) => {
+const TimeDisplay = ({ label, timerOn, extraStyle, setTime, onCheck }) => {
     const [hideChecked, setHideChecked] = useState(false);
     return <View
         style={[{ flex: 1, paddingHorizontal: 10, }, extraStyle]}
@@ -88,6 +88,7 @@ const TimeDisplay = ({ label, timerOn, extraStyle, onCheck }) => {
         <StopWatch
             start={timerOn}
             style={{ fontSize: 26, paddingLeft: 10 }}
+            setTime={setTime}
         />
     </View>;
 }
@@ -95,6 +96,8 @@ const TimeDisplay = ({ label, timerOn, extraStyle, onCheck }) => {
 const RunScreen = () => {
     const [totalTimerOn, setTotalTimerOn] = useState(false);
     const [workTimerOn, setWorkTimerOn] = useState(false);
+    const repcountInput = useRef(null);
+    const notesInput = useRef(null);
 
     const ic_play_src = { uri: 'https://cdn.icon-icons.com/icons2/2226/PNG/512/play_icon_134504.png' };
     const ic_pause_src = { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-pause-512.png' }
@@ -173,6 +176,10 @@ const RunScreen = () => {
                 style={styles.reps_input}
                 onChangeText={text => setRepcount(text)}
                 value={repcount}
+                returnKeyType='done'
+                onSubmitEditing={ev => setRepcount(repcountFormat(ev.nativeEvent.text))}
+                onBlur={() => setRepcount(repcountFormat(repcount))}
+                ref={repcountInput}
             />
             <TextInput
                 placeholder="Enter your notes (optional)"
@@ -180,16 +187,23 @@ const RunScreen = () => {
                 style={styles.notes_input}
                 onChangeText={text => setNotes(text)}
                 value={notes}
+                ref={notesInput}
             />
             <View style={styles.grp_action}>
                 <TouchableOpacity style={styles.action_btn}>
                     <Text style={styles.action_btn_text}>{'CANCEL'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.action_btn} onPress={() => {
+                    // if exercise not selected, show message, {INVALID}
+                    // if timer not started, hide both times
+                    // stop both timers
+                    // if repcount in focus, blur, format
+                    if (repcountInput.current.isFocused()) repcountInput.current.blur();
+                    if (notesInput.current.isFocused()) notesInput.current.blur();
+                    // use formatted repcount
+
                     console.log(exername, startTime, totalTime, workTime, hideTotalTime, hideWorkTime, repcount, notes);
-                    //totalTimw workTime not updating, see issue
-                    // validate repcount
-                    // pass back to main menu and back n forth
+                    // pass back to main menu and back n forth with passing data (screen navigation)
                 }}>
                     <Text style={styles.action_btn_text}>{'SAVE'}</Text>
                 </TouchableOpacity>

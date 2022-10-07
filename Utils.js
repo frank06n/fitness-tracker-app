@@ -37,4 +37,18 @@ const getCurrentTime = () => {
     return (h > 12 ? h - 12 : h) + ':' + (m < 10 ? '0' : '') + m + (hm >= 720 ? ' pm' : ' am');
 }
 
-export { createNewTask, GoalType, createNewGoal, getCurrentTime }
+const getRepsFromInput = repc => {
+    const reg = /\d+( ?x ?\d+)?/g
+    return repc.replace(/ +/g, ' ').match(reg)
+}
+
+const repcountFormat = repc => {
+    const reps = getRepsFromInput(repc)
+    if (!reps || !reps.length) return '';
+
+    let s = '' + reps[0];
+    for (let i = 1; i < reps.length; i++) s += ', ' + reps[i];
+    return s;
+}
+
+export { createNewTask, GoalType, createNewGoal, getCurrentTime, repcountFormat }
