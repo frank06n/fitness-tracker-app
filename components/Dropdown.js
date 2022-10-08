@@ -2,6 +2,9 @@ import React, { useRef, useState } from 'react';
 import { View, FlatList, Modal, StyleSheet, Text, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
 // https://blog.logrocket.com/creating-custom-react-native-dropdown/
 
+// dropdownAllStyles = { style, overlayStyle, searchStyle, itemStyle, itemTextStyle }
+
+
 const DDSearch = ({ customStyle, placeholder, searchTerm, setSearchTerm }) => {
     return <TextInput
         style={[styles.search, customStyle]}
@@ -23,9 +26,10 @@ const DDItem = ({ index, item, displayData, customStyle, customTextStyle, onPres
     </TouchableOpacity>
 };
 
-const Dropdown = ({ onPressOutside, data, onSelect, customStyle, overlayStyle, searchStyle, itemStyle, itemTextStyle }) => {
+const Dropdown = ({ onPressOutside, data, onSelect, allStyles }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const displayData = data.filter((item) => item.label.toLowerCase().startsWith(searchTerm.toLowerCase()));
+    const { style, overlayStyle, searchStyle, itemStyle, itemTextStyle } = allStyles;
 
     return (
         <Modal visible={true} transparent animationType="fade">
@@ -33,7 +37,7 @@ const Dropdown = ({ onPressOutside, data, onSelect, customStyle, overlayStyle, s
                 style={[styles.overlay, overlayStyle]}
                 onPress={onPressOutside}
             >
-                <View style={[styles.dropdown, customStyle]}>
+                <View style={[styles.dropdown, style]}>
                     <DDSearch
                         placeholder={'Search exercise'}
                         customStyle={searchStyle}
@@ -67,11 +71,7 @@ const DropdownComponent = (props) => {
         icon,
         style,
         textStyle,
-        overlayStyle,
-        dropdownStyle,
-        searchStyle,
-        itemStyle,
-        itemTextStyle
+        dropdownAllStyles
     } = props;
 
     const [visible, setVisible] = useState(false);
@@ -91,6 +91,9 @@ const DropdownComponent = (props) => {
         setVisible(true);
     };
 
+    const d_allStyles = { ...dropdownAllStyles };
+    d_allStyles.style = [{ top: ddTop, width: ddWidth }, d_allStyles.style];
+
     return <TouchableOpacity
         ref={Self}
         style={[styles.button, style]}
@@ -106,11 +109,7 @@ const DropdownComponent = (props) => {
                     onSelect(item);
                     setVisible(false);
                 }}
-                customStyle={[{ top: ddTop, width: ddWidth }, dropdownStyle]}
-                overlayStyle={overlayStyle}
-                searchStyle={searchStyle}
-                itemStyle={itemStyle}
-                itemTextStyle={itemTextStyle}
+                allStyles={d_allStyles}
             />
         }
         <Text style={[styles.buttonText, textStyle]}>{selected ? selected.label : label}</Text>

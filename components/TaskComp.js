@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Menu, MenuItem } from "react-native-material-menu";
+import { formatTime12hf } from "../Utils";
 
 
 
@@ -8,9 +9,6 @@ const tf = (x) => {
     const m = Math.floor(x / 60);
     const s = x % 60;
     return m + ':' + (s < 10 ? '0' : '') + s;
-}
-const tf2 = (x) => {
-    return (x >= 720) ? tf(x - 720) + 'pm' : tf(x) + 'am';
 }
 
 const styles = StyleSheet.create({
@@ -51,10 +49,11 @@ const styles = StyleSheet.create({
     },
     notesText: {
         fontSize: 12,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#f5f5f5',
         marginRight: 10, marginLeft: 4, marginTop: 12,
-        borderRadius: 6,
-        paddingHorizontal: 6, paddingVertical: 4
+        borderRadius: 6, //borderWidth: 0.6, borderColor: '#888',
+        paddingHorizontal: 6, paddingVertical: 4,
+        elevation: 1.8,
     }
 })
 
@@ -126,7 +125,7 @@ const TaskComp = ({ task, editor }) => {
     return <View style={styles.container}>
         <View style={styles.firstRow}>
             <Text style={styles.exercise_name}> {task.exercise_name} </Text>
-            <Text style={styles.start_time}> {tf2(task.start_time)}</Text>
+            <Text style={styles.start_time}> {formatTime12hf(task.start_time)}</Text>
             {editMenu}
         </View>
         <View style={styles.secondRow}>

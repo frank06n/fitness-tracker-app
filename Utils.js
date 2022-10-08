@@ -1,15 +1,15 @@
-const createNewTask = (exercise_name, start_time) => {
+const createNewTask = (exercise_name, start_time = getCurrentTimeMins()) => {
     const d = new Date()
     const st = d.getHours() * 60 + d.getMinutes()
     return {
         exercise_name: exercise_name,
-        start_time: st,//start_time,
+        start_time: start_time,
         total_time: 0,
         work_time: 0,
         hide_total_time: false,
         hide_work_time: false,
-        rep_count: '3x14',
-        notes: 'Aaa asbas this is a note'
+        rep_count: '',
+        notes: ''
     };
 }
 
@@ -29,12 +29,15 @@ const createNewGoal = (exercise_name) => {
     };
 };
 
-const getCurrentTime = () => {
-    const d = new Date()
-    const h = d.getHours();
-    const m = d.getMinutes();
-    const hm = h * 60 + m;
-    return (h > 12 ? h - 12 : h) + ':' + (m < 10 ? '0' : '') + m + (hm >= 720 ? ' pm' : ' am');
+const getCurrentTimeMins = () => {
+    const d = new Date();
+    return d.getHours() * 60 + d.getMinutes();
+}
+
+const formatTime12hf = mins => {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return (h > 12 ? h - 12 : h) + ':' + (m < 10 ? '0' : '') + m + (mins >= 720 ? ' pm' : ' am');
 }
 
 const getRepsFromInput = repc => {
@@ -51,4 +54,4 @@ const repcountFormat = repc => {
     return s;
 }
 
-export { createNewTask, GoalType, createNewGoal, getCurrentTime, repcountFormat }
+export { createNewTask, GoalType, createNewGoal, repcountFormat, getCurrentTimeMins, formatTime12hf }
