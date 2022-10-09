@@ -67,6 +67,7 @@ const DropdownComponent = (props) => {
     const {
         label,
         data,
+        selectedItem,
         onSelect,
         icon,
         style,
@@ -75,7 +76,7 @@ const DropdownComponent = (props) => {
     } = props;
 
     const [visible, setVisible] = useState(false);
-    const [selected, setSelected] = useState(undefined);
+    const [selected, setSelected] = useState(selectedItem);
 
     const [ddTop, set_ddTop] = useState(0);
     const [ddWidth, set_ddWidth] = useState('100%');
