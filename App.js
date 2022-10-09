@@ -3,24 +3,17 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import RunScreen from "./screens/RunScreen";
-import { Image } from "react-native";
+import HistoryScreen from "./screens/HistoryScreen";
 
 const Stack = createNativeStackNavigator();
-
-const Btn_LogScreen = () => (
-	<Image
-		style={{ width: 25, height: 25, margin: 5 }}
-		source={{ uri: "https://www.freeiconspng.com/thumbs/history-icon-png/simple-history-icon-18.png" }}
-	// on press go to all log view
-	/>
-);
 
 function App() {
 	return (
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName="Home">
-				<Stack.Screen name="Home" component={HomeScreen} options={{ headerRight: Btn_LogScreen }} />
+				<Stack.Screen name="Home" component={HomeScreen} />
 				<Stack.Screen name="Run" component={RunScreen} />
+				<Stack.Screen name="History" component={HistoryScreen} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
@@ -28,10 +21,20 @@ function App() {
 
 export default App;
 
-// TODO
-// Cario and Workout Screen
-// Clean Up
-// Make a proper plan ***
-// color scheme & design
-
-// https://hartaniyassir.medium.com/how-to-create-a-popup-menu-in-react-native-d2fc8908e932
+/** /// TODO ///
+ * >> create history button beside (+) button in home screen
+ * 
+ * >> create such that homescreen can open old day's tasklist (add close/list/today buttons)
+ * >>   ``    ``   ``  runscreen can edit a task when provided (hook the edit button from homescreen)
+ * 
+ * 
+ * >> on App Open
+ * if asyncStorage '@date' not exists
+ * 	  save current date to '@date'	  
+ * else if '@date' != (current date)
+ *    save tasklist as a history of '@date'
+ *    clear tasklist
+ * 	  save current date to '@date'
+ * -----------------------------------
+ * 
+ */
