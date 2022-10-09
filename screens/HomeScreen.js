@@ -1,36 +1,40 @@
 import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from "react-native";
 import TaskComp from "../components/TaskComp";
-import { createNewTask } from "../Utils";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const tasks_list = [
-    createNewTask('Run'),
-    createNewTask('Squats'),
-    createNewTask('Walk'),
-    createNewTask('Plank'),
-]
+const loadTasks = setTasksList => {
+    AsyncStorage.getItem('@tasksList')
+        .then(value => setTasksList(JSON.parse(value)))
+        .catch(error => console.log('load tasks error', error));
+};
 
-function useForceUpdate() {
-    const [value, setValue] = useState(0);
-    return () => setValue(value => value + 1); // update state to force render
-}
+const saveTasks = tasksList => {
+    AsyncStorage.setItem('@tasksList', JSON.stringify(tasksList))
+        .then(_ => console.log('save success'))
+        .catch(error => console.log('save tasks error', error));
+};
 
 const HomeScreen = ({ navigation, route: { params } }) => {
-    const forceUpdate = useForceUpdate();
+    const [tasksList, setTasksList] = useState([]);
 
-    if (params && params.taskItem) {
-        tasks_list.push(params.taskItem);
-        navigation.setParams({ taskItem: undefined });
-        return;
+    const removeTask = n => {
+        const newList = [...tasksList];
+        newList.splice(n, 1);
+        setTasksList(newList);
+        saveTasks(newList);
     }
 
+    useEffect(() => {
+        loadTasks(setTasksList);
+    }, []);
 
-
-    const tasks_editor = {
-        deleteItem: (n) => {
-            tasks_list.splice(n, 1);
-            forceUpdate();
-        }
+    if (params && params.taskItem) {
+        Promise.resolve().then(() => {
+            tasksList.push(params.taskItem);
+            saveTasks(tasksList);
+            navigation.setParams({ taskItem: undefined });
+        });
     }
 
     return (
@@ -38,8 +42,8 @@ const HomeScreen = ({ navigation, route: { params } }) => {
             <FlatList
                 style={{ flex: 1 }}
                 contentContainerStyle={{ paddingVertical: 10 }}
-                data={tasks_list}
-                renderItem={(t) => <TaskComp task={t} editor={tasks_editor} />}
+                data={tasksList}
+                renderItem={(t) => <TaskComp task={t} removeTask={removeTask} />}
             />
             <TouchableOpacity
                 activeOpacity={1}

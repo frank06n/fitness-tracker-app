@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 })
 
 
-const TaskComp = ({ task, editor }) => {
+const TaskComp = ({ task, removeTask }) => {
     const task_obj = task;
     task = task.item;
     const [visible, setVisible] = useState(false);
@@ -66,9 +66,9 @@ const TaskComp = ({ task, editor }) => {
     const showMenu = () => setVisible(true);
     const [notesVis, setNotesVis] = useState(false);
 
-    const deleteTask = () => {
+    const removeThisTaskComp = () => {
         hideMenu();
-        editor.deleteItem(task_obj.index);
+        removeTask(task_obj.index);
     }
 
     const toggleNotes = () => {
@@ -92,7 +92,7 @@ const TaskComp = ({ task, editor }) => {
             anchor={editBtn}
         >
             <MenuItem onPress={hideMenu}>Edit</MenuItem>
-            <MenuItem onPress={deleteTask}>Delete</MenuItem>
+            <MenuItem onPress={removeThisTaskComp}>Delete</MenuItem>
             <MenuItem onPress={toggleNotes}>{notesVis ? 'Hide Notes' : 'Show Notes'}</MenuItem>
         </Menu>
     );
