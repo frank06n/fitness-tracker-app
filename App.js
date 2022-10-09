@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import RunScreen from "./screens/RunScreen";
 import { Image } from "react-native";
-import TempScreen from "./screens/TempScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,7 +21,6 @@ function App() {
 			<Stack.Navigator initialRouteName="Home">
 				<Stack.Screen name="Home" component={HomeScreen} options={{ headerRight: Btn_LogScreen }} />
 				<Stack.Screen name="Run" component={RunScreen} />
-				<Stack.Screen name="Temp" component={TempScreen} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

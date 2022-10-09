@@ -1,4 +1,4 @@
-import { useState, useEffect, Component, useRef } from "react";
+import { useState, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button, Alert } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/WrathChaos/react-native-bouncy-checkbox
 import DropdownComponent from "../components/Dropdown";
