@@ -48,6 +48,13 @@ class StopWatch extends Component {
             }
         }
         // check for startTime prop
+        if (this.props.startTime !== prevProps.startTime) {
+            const newElapsed = this.props.startTime ? this.props.startTime : 0;
+            this.setState({
+                elapsed: newElapsed,
+                initial: new Date() - newElapsed
+            });
+        }
 
         // if (newProps.reset) {
         //         this.reset();
