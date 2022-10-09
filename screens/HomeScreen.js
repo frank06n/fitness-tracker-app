@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from "react-native";
 import TaskComp from "../components/TaskComp";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -45,13 +45,28 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                 data={tasksList}
                 renderItem={(t) => <TaskComp task={t} removeTask={removeTask} />}
             />
-            <TouchableOpacity
-                activeOpacity={1}
-                style={styles.add_btn}
-                onPress={() => navigation.navigate('Run')}
-            >
-                <Text style={styles.add_btn_text}>+</Text>
-            </TouchableOpacity>
+            <View style={styles.G_bottom_btns}>
+                <TouchableOpacity
+                    activeOpacity={1}
+                    style={[styles.bottom_btn, { marginRight: 15 }]}
+                    onPress={() => navigation.navigate('Run')}
+                >
+                    <Image
+                        style={{ width: 15, height: 15 }}
+                        source={{ uri: 'https://cdn-icons-png.flaticon.com/512/63/63747.png' }}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    activeOpacity={1}
+                    style={styles.bottom_btn}
+                    onPress={() => navigation.navigate('History')}
+                >
+                    <Image
+                        style={{ width: 25, height: 25 }}
+                        source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/OOjs_UI_icon_history.svg/1024px-OOjs_UI_icon_history.svg.png' }}
+                    />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -60,14 +75,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    add_btn: {
+    G_bottom_btns: {
+        flexDirection: 'row',
         height: 50,
+        paddingHorizontal: 15, paddingTop: 8,
+        elevation: 6,
+        backgroundColor: '#fff'
+    },
+    bottom_btn: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#fff',
-        elevation: 6
+        elevation: 6,
+        borderTopRightRadius: 6, borderTopLeftRadius: 6,
     },
-    add_btn_text: {
+    bottom_btn_txt: {
         fontSize: 30
     }
 });
