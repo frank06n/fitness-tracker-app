@@ -43,7 +43,7 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                 style={{ flex: 1 }}
                 contentContainerStyle={{ paddingVertical: 10 }}
                 data={tasksList}
-                renderItem={(t) => <TaskComp task={t} removeTask={removeTask} />}
+                renderItem={(t) => <TaskComp task={t} removeTask={removeTask} navigate={navigation.navigate} />}
             />
             <View style={styles.G_bottom_btns}>
                 <TouchableOpacity

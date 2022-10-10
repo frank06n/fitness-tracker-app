@@ -51,20 +51,25 @@ const styles = StyleSheet.create({
         fontSize: 12,
         backgroundColor: '#f5f5f5',
         marginRight: 10, marginLeft: 4, marginTop: 12,
-        borderRadius: 6, //borderWidth: 0.6, borderColor: '#888',
+        borderRadius: 6,
         paddingHorizontal: 6, paddingVertical: 4,
         elevation: 1.8,
     }
 })
 
 
-const TaskComp = ({ task, removeTask }) => {
+const TaskComp = ({ task, removeTask, navigate }) => {
     const task_obj = task;
     task = task.item;
     const [visible, setVisible] = useState(false);
     const hideMenu = () => setVisible(false);
     const showMenu = () => setVisible(true);
     const [notesVis, setNotesVis] = useState(false);
+
+    const editTask = () => {
+        hideMenu();
+        navigate('Run', { editTaskItem: true, taskItem: task });
+    }
 
     const removeThisTaskComp = () => {
         hideMenu();
@@ -91,7 +96,7 @@ const TaskComp = ({ task, removeTask }) => {
             onRequestClose={hideMenu}
             anchor={editBtn}
         >
-            <MenuItem onPress={hideMenu}>Edit</MenuItem>
+            <MenuItem onPress={editTask}>Edit</MenuItem>
             <MenuItem onPress={removeThisTaskComp}>Delete</MenuItem>
             <MenuItem onPress={toggleNotes}>{notesVis ? 'Hide Notes' : 'Show Notes'}</MenuItem>
         </Menu>

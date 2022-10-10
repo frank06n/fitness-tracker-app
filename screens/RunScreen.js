@@ -1,9 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button, Alert } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/WrathChaos/react-native-bouncy-checkbox
 import DropdownComponent from "../components/Dropdown";
 import StopWatch from "../components/StopWatch";
-import { formatTime12hf, getCurrentTimeMins, repcountFormat } from "../Utils";
+import { createNewTask, formatTime12hf, getCurrentTimeMins, repcountFormat } from "../Utils";
 
 const styles = StyleSheet.create({
     container: {
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
         elevation: 2,
+        marginBottom: 10,
     },
     time_btn_ic: {
         width: 30, height: 30, elevation: 3
@@ -69,7 +70,6 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         elevation: 2,
         paddingHorizontal: 8, paddingVertical: 4,
-        marginTop: 10
     },
     notes_input: {
         backgroundColor: '#fff',
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const TimeDisplay = ({ label, timerOn, extraStyle, setTime, checkedState }) => {
+const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checkedState }) => {
     const [hideChecked, setHideChecked] = checkedState;
     const _styles = StyleSheet.create({
         container: {
@@ -107,7 +107,7 @@ const TimeDisplay = ({ label, timerOn, extraStyle, setTime, checkedState }) => {
         checkBox: {
             paddingHorizontal: 10, paddingVertical: 6,
             alignSelf: 'stretch',
-            borderRadius: 4, borderWidth: 0.5, borderColor: '#555',
+            borderRadius: 4, borderWidth: 0.6, borderColor: '#555',
             marginBottom: 8
         },
         checkBox_iconStyle: { borderColor: '#000' },
@@ -135,8 +135,49 @@ const TimeDisplay = ({ label, timerOn, extraStyle, setTime, checkedState }) => {
             style={_styles.stopWatch}
             start={timerOn}
             setTime={setTime}
+            startTime={initialTime}
         />
     </View>;
+}
+
+const RestEditComp = ({ startTime, setStartTime, totalTime, setTotalTime, workTime, setWorkTime }) => {
+    const _styles = StyleSheet.create({
+        container: {
+            backgroundColor: '#fff',
+            borderRadius: 8,
+            elevation: 2,
+            padding: 16,
+            paddingBottom: 8,
+            marginTop: 10,
+            alignItems: 'center'
+        },
+        btn: {
+            width: '60%',
+            paddingHorizontal: 8, paddingVertical: 6,
+            borderRadius: 4, borderWidth: 0.3, borderColor: '#555',
+            marginBottom: 8,
+            backgroundColor: '#fff',
+            elevation: 1,
+            alignItems: 'center'
+        }
+    });
+
+    const edit = (txt, value, setter) => <TouchableOpacity
+        style={_styles.btn}
+        activeOpacity={0.7}
+        onPress={() => {
+            // ask for prompt
+            // set value
+        }}
+    >
+        <Text>{txt}</Text>
+    </TouchableOpacity>;
+
+    return <View style={_styles.container}>
+        {edit('Edit Start Time', startTime, setStartTime)}
+        {edit('Edit Total Time', totalTime, setTotalTime)}
+        {edit('Edit Work Time', workTime, setWorkTime)}
+    </View>
 }
 
 const exerciseList = (() => {
@@ -155,20 +196,30 @@ const exerciseList = (() => {
 const ic_play_src = { uri: 'https://cdn.icon-icons.com/icons2/2226/PNG/512/play_icon_134504.png' };
 const ic_pause_src = { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-pause-512.png' };
 
-const RunScreen = ({ navigation }) => {
+const RunScreen = ({ navigation, route: { params } }) => {
     const [totalTimerOn, setTotalTimerOn] = useState(false);
     const [workTimerOn, setWorkTimerOn] = useState(false);
     const repcountInput = useRef(null);
     const notesInput = useRef(null);
 
-    const [exerciseName, setExername] = useState(undefined);
-    const [startTime, _setStartTime] = useState(getCurrentTimeMins());
-    const [totalTime, setTotalTime] = useState(0);
-    const [workTime, setWorkTime] = useState(0);
-    const [hideTotalTime, setHideTotalTime] = useState(false);
-    const [hideWorkTime, setHideWorkTime] = useState(false);
-    const [repcount, setRepcount] = useState('');
-    const [notes, setNotes] = useState('');
+    const editTaskItem = params && params.editTaskItem;
+    const taskItem = editTaskItem ? params.taskItem : createNewTask(undefined);
+
+    const [exerciseName, setExername] = useState(taskItem.exercise_name);
+    const [startTime, setStartTime] = useState(taskItem.start_time);
+    const [totalTime, setTotalTime] = useState(taskItem.total_time * 1000);
+    const [workTime, setWorkTime] = useState(taskItem.work_time * 1000);
+    const [hideTotalTime, setHideTotalTime] = useState(taskItem.hide_total_time);
+    const [hideWorkTime, setHideWorkTime] = useState(taskItem.hide_work_time);
+    const [repcount, setRepcount] = useState(taskItem.rep_count);
+    const [notes, setNotes] = useState(taskItem.notes);
+
+    const calculateSelectedItem = () => {
+        for (let item of exerciseList)
+            if (item.label == exerciseName)
+                return item;
+        return undefined;
+    }
 
     const returnTaskItem = () => {
         // if exercise not selected, show message, {INVALID}
@@ -212,7 +263,9 @@ const RunScreen = ({ navigation }) => {
                 <Text style={styles.startTime}>{formatTime12hf(startTime)}</Text>
             </View>
             <DropdownComponent
-                label="Select Exercise" data={exerciseList} onSelect={(item) => { setExername(item.label) }}
+                label="Select Exercise" data={exerciseList}
+                selectedItem={calculateSelectedItem()}
+                onSelect={(item) => { setExername(item.label) }}
                 style={styles.dropdown_btn}
                 textStyle={styles.dropdown_btn_txt}
                 dropdownAllStyles={styles.dropdown_all}
@@ -223,21 +276,26 @@ const RunScreen = ({ navigation }) => {
                     timerOn={totalTimerOn}
                     extraStyle={{ borderRightWidth: 0.9, borderColor: '#888' }}
                     setTime={setTotalTime}
+                    initialTime={totalTime}
                     checkedState={[hideTotalTime, setHideTotalTime]}
                 />
                 <TimeDisplay
                     label='Work time'
                     timerOn={workTimerOn}
                     setTime={setWorkTime}
+                    initialTime={workTime}
                     checkedState={[hideWorkTime, setHideWorkTime]}
                 />
             </View>
-            <TouchableOpacity style={styles.time_btn} onPress={() => {
-                if (!totalTimerOn) setTotalTimerOn(true);
-                setWorkTimerOn(!workTimerOn);
-            }}>
-                <Image style={styles.time_btn_ic} source={workTimerOn ? ic_pause_src : ic_play_src} />
-            </TouchableOpacity>
+            {
+                !editTaskItem &&
+                <TouchableOpacity style={styles.time_btn} onPress={() => {
+                    if (!totalTimerOn) setTotalTimerOn(true);
+                    setWorkTimerOn(!workTimerOn);
+                }}>
+                    <Image style={styles.time_btn_ic} source={workTimerOn ? ic_pause_src : ic_play_src} />
+                </TouchableOpacity>
+            }
             <TextInput
                 ref={repcountInput}
                 placeholder="Enter your reps (optional)"
@@ -256,6 +314,17 @@ const RunScreen = ({ navigation }) => {
                 multiline={true}
                 onChangeText={text => setNotes(text)}
             />
+            {
+                editTaskItem &&
+                <RestEditComp
+                    startTime={startTime}
+                    setStartTime={setStartTime}
+                    totalTime={totalTime}
+                    setTotalTime={setTotalTime}
+                    workTime={workTime}
+                    setWorkTime={setWorkTime}
+                />
+            }
             <View style={styles.G_action}>
                 <TouchableOpacity style={styles.action_btn} onPress={() => {
                     Alert.alert(
