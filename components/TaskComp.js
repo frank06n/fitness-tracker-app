@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
 })
 
 
-const TaskComp = ({ task, removeTask, navigate }) => {
-    const task_obj = task;
-    task = task.item;
+const TaskComp = ({ task: task_obj, removeTask, navigate }) => {
+
+    const task = task_obj.item;
     const [visible, setVisible] = useState(false);
     const hideMenu = () => setVisible(false);
     const showMenu = () => setVisible(true);
@@ -68,7 +68,7 @@ const TaskComp = ({ task, removeTask, navigate }) => {
 
     const editTask = () => {
         hideMenu();
-        navigate('Run', { editTaskItem: true, taskItem: task });
+        navigate('Run', { editTaskItem: true, taskItem: task, taskIndex: task_obj.index });
     }
 
     const removeThisTaskComp = () => {

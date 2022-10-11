@@ -214,6 +214,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
 
     const editTaskItem = params && params.editTaskItem;
     const taskItem = editTaskItem ? params.taskItem : createNewTask(undefined);
+    const taskIndex = editTaskItem ? params.taskIndex : -1;
 
     const [exerciseName, setExername] = useState(taskItem.exercise_name);
     const [startTime, setStartTime] = useState(taskItem.start_time);
@@ -263,7 +264,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
             rep_count: repcountFormat(repcount),
             notes: notes
         };
-        navigation.navigate('Home', { taskItem: mItem });
+        navigation.navigate('Home', { taskItem: mItem, editTaskItem: editTaskItem, taskIndex: taskIndex });
     }
 
     return (

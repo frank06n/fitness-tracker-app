@@ -31,7 +31,12 @@ const HomeScreen = ({ navigation, route: { params } }) => {
 
     if (params && params.taskItem) {
         Promise.resolve().then(() => {
-            tasksList.push(params.taskItem);
+            if (params.editTaskItem) {
+                tasksList[params.taskIndex] = params.taskItem;
+            }
+            else {
+                tasksList.push(params.taskItem);
+            }
             saveTasks(tasksList);
             navigation.setParams({ taskItem: undefined });
         });
