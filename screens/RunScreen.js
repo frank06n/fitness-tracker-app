@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button, Alert } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/WrathChaos/react-native-bouncy-checkbox
 import DropdownComponent from "../components/Dropdown";
+import Prompt from "../components/Prompt";
 import StopWatch from "../components/StopWatch";
-import { createNewTask, formatTime12hf, getCurrentTimeMins, repcountFormat } from "../Utils";
+import { createNewTask, formatTime12hf, repcountFormat } from "../Utils";
 
 const styles = StyleSheet.create({
     container: {
@@ -95,6 +96,24 @@ const styles = StyleSheet.create({
     },
     action_btn_txt: {
         color: '#f2f2f2', fontSize: 16
+    },
+    restEditComp: {
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        elevation: 2,
+        padding: 16,
+        paddingBottom: 8,
+        marginTop: 10,
+        alignItems: 'center'
+    },
+    restEditComp_btn: {
+        width: '60%',
+        paddingHorizontal: 8, paddingVertical: 6,
+        borderRadius: 4, borderWidth: 0.3, borderColor: '#555',
+        marginBottom: 8,
+        backgroundColor: '#fff',
+        elevation: 1,
+        alignItems: 'center'
     }
 });
 
@@ -140,43 +159,34 @@ const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checked
     </View>;
 }
 
+const RestEditComp_btn = (txt, value, setTimeValue, setPromptData) => <TouchableOpacity
+    style={styles.restEditComp_btn}
+    activeOpacity={0.7}
+    onPress={() => {
+        setPromptData({
+            visible: true,
+            title: `Edit ${txt} time`,
+            message: `Use this to change ${txt} time`,
+            placeholder: `Enter ${txt} time here`,
+            defaultValue: value.toString(),
+            buttons: [
+                { text: 'OK', onPress: val => { setTimeValue(parseInt(val)); setPromptData({}) } },
+                { text: 'Cancel', onPress: _ => setPromptData({}) },
+            ]
+        });
+    }}
+>
+    <Text>{`Edit ${txt} time`}</Text>
+</TouchableOpacity>;
+
 const RestEditComp = ({ startTime, setStartTime, totalTime, setTotalTime, workTime, setWorkTime }) => {
-    const _styles = StyleSheet.create({
-        container: {
-            backgroundColor: '#fff',
-            borderRadius: 8,
-            elevation: 2,
-            padding: 16,
-            paddingBottom: 8,
-            marginTop: 10,
-            alignItems: 'center'
-        },
-        btn: {
-            width: '60%',
-            paddingHorizontal: 8, paddingVertical: 6,
-            borderRadius: 4, borderWidth: 0.3, borderColor: '#555',
-            marginBottom: 8,
-            backgroundColor: '#fff',
-            elevation: 1,
-            alignItems: 'center'
-        }
-    });
+    const [promptData, setPromptData] = useState({});
 
-    const edit = (txt, value, setter) => <TouchableOpacity
-        style={_styles.btn}
-        activeOpacity={0.7}
-        onPress={() => {
-            // ask for prompt
-            // set value
-        }}
-    >
-        <Text>{txt}</Text>
-    </TouchableOpacity>;
-
-    return <View style={_styles.container}>
-        {edit('Edit Start Time', startTime, setStartTime)}
-        {edit('Edit Total Time', totalTime, setTotalTime)}
-        {edit('Edit Work Time', workTime, setWorkTime)}
+    return <View style={styles.restEditComp}>
+        {RestEditComp_btn('Start', startTime, setStartTime, setPromptData)}
+        {RestEditComp_btn('Total', totalTime, setTotalTime, setPromptData)}
+        {RestEditComp_btn('Work', workTime, setWorkTime, setPromptData)}
+        <Prompt {...promptData} onPressOutside={() => setPromptData({})} />
     </View>
 }
 
