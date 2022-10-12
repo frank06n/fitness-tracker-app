@@ -1,6 +1,39 @@
+import dateFormat from "dateformat";
+
+/*
+* DateTime formats:
+* startTime	    h:MM tt		9:15 pm      -> total minutes
+* work/total	M:ss.l		5:32.6       -> total millis
+* date          dd-mmm-yy	12-mar-22    -> string
+*/
+
+const parseDate = str => new Date(str)
+const stringifyDate = dateObj => dateFormat(dateObj, 'dd-mmm-yy')
+const parseTime_1 = str => {
+    const d = new Date('1-Jan-1 ' + str);
+    return d.getHours() * 60 + d.getMinutes();
+}
+const stringifyTime_1 = totalMins => {
+    const d = new Date();
+    d.setHours(totalMins / 60);
+    d.setMinutes(totalMins % 60);
+    return dateFormat(d, 'h:MM tt');
+}
+const parseTime_2 = str => {
+    const [str0, decis] = str.split('.');
+    const d = new Date('1-Jan-1 00:' + str0);
+    return (d.getMinutes() * 60000) + (d.getSeconds() * 1000) + (decis * 100);
+}
+const stringifyTime_2 = totalMillis => {
+    const d = new Date();
+    d.setMilliseconds(totalMillis % 1000);
+    d.setSeconds((totalMillis / 1000) % 60);
+    d.setMinutes(totalMillis / 60000);
+    const ss = dateFormat(d, 'M:ss.l')
+    return ss.substring(0, ss.length - 2);
+}
+
 const createNewTask = (exercise_name, start_time = getCurrentTimeMins()) => {
-    const d = new Date()
-    const st = d.getHours() * 60 + d.getMinutes()
     return {
         exercise_name: exercise_name,
         start_time: start_time,
@@ -34,11 +67,6 @@ const getCurrentTimeMins = () => {
     return d.getHours() * 60 + d.getMinutes();
 }
 
-const formatTime12hf = mins => {
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    return (h > 12 ? h - 12 : h) + ':' + (m < 10 ? '0' : '') + m + (mins >= 720 ? ' pm' : ' am');
-}
 
 const getRepsFromInput = repc => {
     const reg = /\d+( ?x ?\d+)?/g
@@ -54,4 +82,7 @@ const repcountFormat = repc => {
     return s;
 }
 
-export { createNewTask, GoalType, createNewGoal, repcountFormat, getCurrentTimeMins, formatTime12hf }
+export {
+    createNewTask, GoalType, createNewGoal, repcountFormat,
+    parseDate, parseTime_1, parseTime_2, stringifyDate, stringifyTime_1, stringifyTime_2
+}

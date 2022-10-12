@@ -1,15 +1,7 @@
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Menu, MenuItem } from "react-native-material-menu";
-import { formatTime12hf } from "../Utils";
-
-
-
-const tf = (x) => {
-    const m = Math.floor(x / 60);
-    const s = x % 60;
-    return m + ':' + (s < 10 ? '0' : '') + s;
-}
+import { stringifyTime_1, stringifyTime_2 } from "../Utils";
 
 const styles = StyleSheet.create({
     container: {
@@ -109,12 +101,12 @@ const TaskComp = ({ task: task_obj, removeTask, navigate }) => {
     const totalTime = condit(
         !task.hide_total_time,
         styles.secondRow_item,
-        'Total: ' + tf(task.total_time)
+        'Total: ' + stringifyTime_2(task.total_time)
     );
     const workTime = condit(
         !task.hide_work_time,
         styles.secondRow_item,
-        'Work: ' + tf(task.work_time)
+        'Work: ' + stringifyTime_2(task.work_time)
     );
     const repCount = condit(
         task.rep_count,
@@ -130,7 +122,7 @@ const TaskComp = ({ task: task_obj, removeTask, navigate }) => {
     return <View style={styles.container}>
         <View style={styles.firstRow}>
             <Text style={styles.exercise_name}> {task.exercise_name} </Text>
-            <Text style={styles.start_time}> {formatTime12hf(task.start_time)}</Text>
+            <Text style={styles.start_time}> {stringifyTime_1(task.start_time)}</Text>
             {editMenu}
         </View>
         <View style={styles.secondRow}>

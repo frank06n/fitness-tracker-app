@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from "react-native";
+import { View, TouchableOpacity, StyleSheet, FlatList, Image } from "react-native";
 import TaskComp from "../components/TaskComp";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -38,6 +38,7 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                 tasksList.push(params.taskItem);
             }
             saveTasks(tasksList);
+            console.log(tasksList);
             navigation.setParams({ taskItem: undefined });
         });
     }

@@ -4,7 +4,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/
 import DropdownComponent from "../components/Dropdown";
 import Prompt from "../components/Prompt";
 import StopWatch from "../components/StopWatch";
-import { createNewTask, formatTime12hf, repcountFormat } from "../Utils";
+import { createNewTask, parseTime_1, parseTime_2, repcountFormat, stringifyTime_1, stringifyTime_2 } from "../Utils";
 
 const styles = StyleSheet.create({
     container: {
@@ -168,9 +168,14 @@ const RestEditComp_btn = (txt, value, setTimeValue, setPromptData) => <Touchable
             title: `Edit ${txt} time`,
             message: `Use this to change ${txt} time`,
             placeholder: `Enter ${txt} time here`,
-            defaultValue: value.toString(),
+            defaultValue: txt == "Start" ? stringifyTime_1(value) : stringifyTime_2(value),
             buttons: [
-                { text: 'OK', onPress: val => { setTimeValue(parseInt(val)); setPromptData({}) } },
+                {
+                    text: 'OK', onPress: val => {
+                        setTimeValue((txt == "Start") ? parseTime_1(val) : parseTime_2(val));
+                        setPromptData({});
+                    }
+                },
                 { text: 'Cancel', onPress: _ => setPromptData({}) },
             ]
         });
@@ -218,8 +223,8 @@ const RunScreen = ({ navigation, route: { params } }) => {
 
     const [exerciseName, setExername] = useState(taskItem.exercise_name);
     const [startTime, setStartTime] = useState(taskItem.start_time);
-    const [totalTime, setTotalTime] = useState(taskItem.total_time * 1000);
-    const [workTime, setWorkTime] = useState(taskItem.work_time * 1000);
+    const [totalTime, setTotalTime] = useState(taskItem.total_time);
+    const [workTime, setWorkTime] = useState(taskItem.work_time);
     const [hideTotalTime, setHideTotalTime] = useState(taskItem.hide_total_time);
     const [hideWorkTime, setHideWorkTime] = useState(taskItem.hide_work_time);
     const [repcount, setRepcount] = useState(taskItem.rep_count);
@@ -253,12 +258,11 @@ const RunScreen = ({ navigation, route: { params } }) => {
         if (notesInput.current.isFocused()) notesInput.current.blur();
         // use formatted repcount
 
-        const strip = time => Math.round(time / 100) / 10
         const mItem = {
             exercise_name: exerciseName,
             start_time: startTime,
-            total_time: strip(totalTime),
-            work_time: strip(workTime),
+            total_time: totalTime,
+            work_time: workTime,
             hide_total_time: hideTotalTime,
             hide_work_time: hideWorkTime,
             rep_count: repcountFormat(repcount),
@@ -271,7 +275,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
         <View style={styles.container}>
             <View style={styles.G_startTime}>
                 <Text style={styles.startTime_label}>{'Start time:'}</Text>
-                <Text style={styles.startTime}>{formatTime12hf(startTime)}</Text>
+                <Text style={styles.startTime}>{stringifyTime_1(startTime)}</Text>
             </View>
             <DropdownComponent
                 label="Select Exercise" data={exerciseList}

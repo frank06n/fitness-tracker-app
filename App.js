@@ -30,11 +30,15 @@ export default App;
  * 
  * >> on App Open
  * if asyncStorage '@date' not exists
- * 	  save current date to '@date'	  
+ * 	  save (current date) in '@date'	  
  * else if '@date' != (current date)
  *    save tasklist as a history of '@date'
  *    clear tasklist
- * 	  save current date to '@date'
+ * 	  save (current date) in '@date'
  * -----------------------------------
  * 
+ * DateTime formats:
+ * startTime		h:MM tt		9:15 pm
+ * work/total		M:ss.l		5:32.6
+ * date             dd:mm:yy	12-mar-22
  */
