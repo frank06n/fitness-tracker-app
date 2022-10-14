@@ -230,6 +230,9 @@ const RunScreen = ({ navigation, route: { params } }) => {
     const [repcount, setRepcount] = useState(taskItem.rep_count);
     const [notes, setNotes] = useState(taskItem.notes);
 
+    const [deTotalTime, setDeTotalTime] = useState(taskItem.total_time);
+    const [deWorkTime, setDeWorkTime] = useState(taskItem.work_time);
+
     const calculateSelectedItem = () => {
         for (let item of exerciseList)
             if (item.label == exerciseName)
@@ -291,14 +294,14 @@ const RunScreen = ({ navigation, route: { params } }) => {
                     timerOn={totalTimerOn}
                     extraStyle={{ borderRightWidth: 0.9, borderColor: '#888' }}
                     setTime={setTotalTime}
-                    initialTime={totalTime}
+                    initialTime={deTotalTime}
                     checkedState={[hideTotalTime, setHideTotalTime]}
                 />
                 <TimeDisplay
                     label='Work time'
                     timerOn={workTimerOn}
                     setTime={setWorkTime}
-                    initialTime={workTime}
+                    initialTime={deWorkTime}
                     checkedState={[hideWorkTime, setHideWorkTime]}
                 />
             </View>
@@ -335,9 +338,9 @@ const RunScreen = ({ navigation, route: { params } }) => {
                     startTime={startTime}
                     setStartTime={setStartTime}
                     totalTime={totalTime}
-                    setTotalTime={setTotalTime}
+                    setTotalTime={setDeTotalTime}
                     workTime={workTime}
-                    setWorkTime={setWorkTime}
+                    setWorkTime={setDeWorkTime}
                 />
             }
             <View style={styles.G_action}>
