@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const loadTasks = setTasksList => {
     AsyncStorage.getItem('@tasksList')
-        .then(value => setTasksList(JSON.parse(value)))
+        .then(value => setTasksList(JSON.parse(value) || []))
         .catch(error => console.log('load tasks error', error));
 };
 
@@ -38,7 +38,6 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                 tasksList.push(params.taskItem);
             }
             saveTasks(tasksList);
-            console.log(tasksList);
             navigation.setParams({ taskItem: undefined });
         });
     }
