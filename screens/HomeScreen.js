@@ -15,6 +15,11 @@ const saveTasks = tasksList => {
         .catch(error => console.log('save tasks error', error));
 };
 
+const ic_add = require('../assets/images/ic_add.png');
+const ic_delete = require('../assets/images/ic_delete.png');
+const ic_edit_date = require('../assets/images/ic_edit_date.png');
+const ic_history = require('../assets/images/ic_history.png');
+
 const HomeScreen = ({ navigation, route: { params } }) => {
     const [tasksList, setTasksList] = useState([]);
 
@@ -51,29 +56,40 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                 renderItem={(t) => <TaskComp task={t} removeTask={removeTask} navigate={navigation.navigate} />}
             />
             <View style={styles.G_bottom_btns}>
-                <TouchableOpacity
-                    activeOpacity={1}
-                    style={[styles.bottom_btn, { marginRight: 15 }]}
+                <BottomBtn
+                    icon={ic_add}
                     onPress={() => navigation.navigate('Run')}
-                >
-                    <Image
-                        style={{ width: 25, height: 25 }}
-                        source={require('../assets/images/ic_add.png')}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    activeOpacity={1}
-                    style={styles.bottom_btn}
+                    extraStyle={{ marginRight: 15 }}
+                />
+                {/* <BottomBtn
+                    icon={ic_edit_date}
+                    onPress={() => navigation.navigate('Run')}
+                    extraStyle={{ marginRight: 15 }}
+                />
+                <BottomBtn
+                    icon={ic_delete}
+                    onPress={() => navigation.navigate('Run')}
+                /> */}
+                <BottomBtn
+                    icon={ic_history}
                     onPress={() => navigation.navigate('History')}
-                >
-                    <Image
-                        style={{ width: 25, height: 25 }}
-                        source={require('../assets/images/ic_edit_date.png')}
-                    />
-                </TouchableOpacity>
+                />
             </View>
         </View>
     );
+}
+
+const BottomBtn = ({ onPress, icon, extraStyle }) => {
+    return <TouchableOpacity
+        activeOpacity={1}
+        style={[styles.bottom_btn, extraStyle]}
+        onPress={onPress}
+    >
+        <Image
+            style={{ width: 25, height: 25 }}
+            source={icon}
+        />
+    </TouchableOpacity>;
 }
 
 const styles = StyleSheet.create({
@@ -93,6 +109,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#fff',
         elevation: 6,
+        borderWidth: 0.2, borderColor: '#999', borderBottomWidth: 0,
         borderTopRightRadius: 6, borderTopLeftRadius: 6,
     },
     bottom_btn_txt: {
