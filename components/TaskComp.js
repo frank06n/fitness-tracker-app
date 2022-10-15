@@ -17,8 +17,8 @@ const styles = StyleSheet.create({
     },
     firstRow: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
         marginBottom: 10,
+        alignItems: 'center',
     },
     exercise_name: {
         flex: 1,
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         marginRight: 5
     },
     editBtn_img: {
-        width: 15, height: 15, margin: 5
+        width: 20, height: 20
     },
     secondRow: {
         flexDirection: 'row',
@@ -77,7 +77,7 @@ const TaskComp = ({ task: task_obj, removeTask, navigate }) => {
         <TouchableOpacity onPress={showMenu}>
             <Image
                 style={styles.editBtn_img}
-                source={{ uri: 'https://cdn-icons-png.flaticon.com/512/61/61140.png' }}
+                source={require('../assets/images/ic_three_dots.png')}
             />
         </TouchableOpacity>
     );

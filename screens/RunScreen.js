@@ -208,8 +208,8 @@ const exerciseList = (() => {
     }
     return data;
 })();
-const ic_play_src = { uri: 'https://cdn.icon-icons.com/icons2/2226/PNG/512/play_icon_134504.png' };
-const ic_pause_src = { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-pause-512.png' };
+const ic_play_src = require('../assets/images/ic_play.png');
+const ic_pause_src = require('../assets/images/ic_pause.png');
 
 const RunScreen = ({ navigation, route: { params } }) => {
     const [totalTimerOn, setTotalTimerOn] = useState(false);

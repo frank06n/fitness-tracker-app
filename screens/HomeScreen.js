@@ -57,8 +57,8 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                     onPress={() => navigation.navigate('Run')}
                 >
                     <Image
-                        style={{ width: 15, height: 15 }}
-                        source={{ uri: 'https://cdn-icons-png.flaticon.com/512/63/63747.png' }}
+                        style={{ width: 25, height: 25 }}
+                        source={require('../assets/images/ic_add.png')}
                     />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -68,7 +68,7 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                 >
                     <Image
                         style={{ width: 25, height: 25 }}
-                        source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/OOjs_UI_icon_history.svg/1024px-OOjs_UI_icon_history.svg.png' }}
+                        source={require('../assets/images/ic_edit_date.png')}
                     />
                 </TouchableOpacity>
             </View>
