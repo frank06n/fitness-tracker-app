@@ -46,9 +46,20 @@ const deleteThisList = (date, navigation) => {
 }
 
 const renameThisList = (date, newDate, tasksList, setDate) => {
+    const d = new Date(newDate);
+    if (isNaN(d)) {
+        Alert.alert('Invalid date!', 'Please enter a valid date');
+        return;
+    }
+    newDate = stringifyDate(d);
+
     AsyncStorage.getItem('@history')
         .then(value => {
             const hist = JSON.parse(value) || [];
+            if (hist.includes(newDate)) {
+                Alert.alert('Invalid date!', 'Provided date already in list');
+                return;
+            }
             const ix = hist.indexOf(date);
             hist[ix] = newDate;
             hist.sort((a, b) => new Date(a) - new Date(b));
@@ -56,8 +67,7 @@ const renameThisList = (date, newDate, tasksList, setDate) => {
         })
         .then(() => AsyncStorage.removeItem(listKey_ofDate(date)))
         .then(() => AsyncStorage.setItem(listKey_ofDate(newDate), JSON.stringify(tasksList)))
-        .then(() => setDate(newDate))
-        .catch(error => console.log('delete error', error));
+        .then(() => setDate(newDate));
 }
 
 const ic_add = require('../assets/images/ic_add.png');
