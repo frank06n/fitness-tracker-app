@@ -162,24 +162,30 @@ const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checked
 const RestEditComp_btn = (txt, value, setTimeValue, setPromptData) => <TouchableOpacity
     style={styles.restEditComp_btn}
     activeOpacity={0.7}
-    onPress={() => {
-        setPromptData({
-            visible: true,
-            title: `Edit ${txt} time`,
-            message: `Use this to change ${txt} time`,
-            placeholder: `Enter ${txt} time here`,
-            defaultValue: txt == "Start" ? stringifyTime_1(value) : stringifyTime_2(value),
-            buttons: [
-                {
-                    text: 'OK', onPress: val => {
-                        setTimeValue((txt == "Start") ? parseTime_1(val) : parseTime_2(val));
-                        setPromptData({});
-                    }
-                },
-                { text: 'Cancel', onPress: _ => setPromptData({}) },
-            ]
-        });
-    }}
+    onPress={() => setPromptData({
+        visible: true,
+        title: `Edit ${txt} time`,
+        message: `Use this to change ${txt} time`,
+        placeholder: `Enter ${txt} time here`,
+        defaultValue: txt == "Start" ? stringifyTime_1(value) : stringifyTime_2(value),
+        buttons: [
+            {
+                text: 'OK', onPress: val => {
+                    const timeVal = (txt == "Start") ? parseTime_1(val) : parseTime_2(val);
+                    const invalidAlert = _ => Alert.alert(
+                        'Invalid input!', (txt == "Start") ?
+                        'Valid format: hh:mm am/pm\nExample: 08:12 am' :
+                        'Valid format: mm:ss.deci \nExample: 6:32.3',
+                    );
+
+                    if (isNaN(timeVal)) Promise.resolve().then(invalidAlert);
+                    else setTimeValue(timeVal);
+                    setPromptData({});
+                }
+            },
+            { text: 'Cancel', onPress: _ => setPromptData({}) },
+        ]
+    })}
 >
     <Text>{`Edit ${txt} time`}</Text>
 </TouchableOpacity>;

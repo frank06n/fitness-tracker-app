@@ -21,9 +21,9 @@ const stringifyTime_1 = totalMins => {
     return dateFormat(d, 'h:MM tt');
 }
 const parseTime_2 = str => {
-    const [str0, decis] = str.split('.');
+    const [str0, decis] = str.includes('.') ? str.split('.') : [str, '0'];
     const d = new Date('1-Jan-1 00:' + str0);
-    return (d.getMinutes() * 60000) + (d.getSeconds() * 1000) + (decis * 100);
+    return (d.getMinutes() * 60000) + (d.getSeconds() * 1000) + (decis.substring(0, 1) * 100);
 }
 const stringifyTime_2 = totalMillis => {
     const d = new Date();
