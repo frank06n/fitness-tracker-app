@@ -1,19 +1,64 @@
 import { useEffect, useState } from "react";
-import { View, TouchableOpacity, StyleSheet, FlatList, Image } from "react-native";
+import { View, TouchableOpacity, StyleSheet, FlatList, Image, Alert } from "react-native";
 import TaskComp from "../components/TaskComp";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { stringifyDate } from "../Utils";
+import Prompt from "../components/Prompt";
 
-const loadTasks = setTasksList => {
-    AsyncStorage.getItem('@tasksList')
+const TODAY = stringifyDate(new Date());
+const listKey_ofDate = date => '@listOf_' + date;
+
+const loadTasks = (date, setTasksList) => {
+    AsyncStorage.getItem(listKey_ofDate(date))
         .then(value => setTasksList(JSON.parse(value) || []))
         .catch(error => console.log('load tasks error', error));
 };
 
-const saveTasks = tasksList => {
-    AsyncStorage.setItem('@tasksList', JSON.stringify(tasksList))
+const saveTasks = (date, tasksList) => {
+    AsyncStorage.setItem(listKey_ofDate(date), JSON.stringify(tasksList))
         .then(_ => console.log('save success'))
         .catch(error => console.log('save tasks error', error));
 };
+
+const checkTodayInHistory = _ => {
+    AsyncStorage.getItem('@history')
+        .then(value => {
+            const hist = JSON.parse(value) || [];
+            if (!hist.includes(TODAY)) {
+                hist.push(TODAY);
+                hist.sort((a, b) => new Date(a) - new Date(b))
+                return AsyncStorage.setItem('@history', JSON.stringify(hist));
+            }
+        })
+        .catch(error => console.log('check today in history error', error))
+}
+
+const deleteThisList = (date, navigation) => {
+    AsyncStorage.getItem('@history')
+        .then(value => {
+            const hist = JSON.parse(value) || [];
+            hist.splice(hist.indexOf(date), 1);
+            return AsyncStorage.setItem('@history', JSON.stringify(hist));
+        })
+        .then(() => AsyncStorage.removeItem(listKey_ofDate(date)))
+        .then(() => navigation.goBack())
+        .catch(error => console.log('delete error', error));
+}
+
+const renameThisList = (date, newDate, tasksList, setDate) => {
+    AsyncStorage.getItem('@history')
+        .then(value => {
+            const hist = JSON.parse(value) || [];
+            const ix = hist.indexOf(date);
+            hist[ix] = newDate;
+            hist.sort((a, b) => new Date(a) - new Date(b));
+            return AsyncStorage.setItem('@history', JSON.stringify(hist));
+        })
+        .then(() => AsyncStorage.removeItem(listKey_ofDate(date)))
+        .then(() => AsyncStorage.setItem(listKey_ofDate(newDate), JSON.stringify(tasksList)))
+        .then(() => setDate(newDate))
+        .catch(error => console.log('delete error', error));
+}
 
 const ic_add = require('../assets/images/ic_add.png');
 const ic_delete = require('../assets/images/ic_delete.png');
@@ -22,17 +67,24 @@ const ic_history = require('../assets/images/ic_history.png');
 
 const HomeScreen = ({ navigation, route: { params } }) => {
     const [tasksList, setTasksList] = useState([]);
+    const [date, setDate] = useState(TODAY);
+    const [promptData, setPromptData] = useState({});
 
     const removeTask = n => {
         const newList = [...tasksList];
         newList.splice(n, 1);
         setTasksList(newList);
-        saveTasks(newList);
+        saveTasks(date, newList);
     }
 
     useEffect(() => {
-        loadTasks(setTasksList);
-    }, []);
+        loadTasks(date, setTasksList);
+        checkTodayInHistory();
+        navigation.setOptions({
+            title: date == TODAY ? 'Today\'s Tasks' : date,
+        });
+    }, [date]);
+
 
     if (params && params.taskItem) {
         Promise.resolve().then(() => {
@@ -42,10 +94,17 @@ const HomeScreen = ({ navigation, route: { params } }) => {
             else {
                 tasksList.push(params.taskItem);
             }
-            saveTasks(tasksList);
+            saveTasks(date, tasksList);
             navigation.setParams({ taskItem: undefined });
         });
     }
+    if (params && params.date) {
+        Promise.resolve().then(() => {
+            setDate(params.date);
+            navigation.setParams({ date: undefined });
+        });
+    }
+
 
     return (
         <View style={styles.container}>
@@ -59,21 +118,46 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                 <BottomBtn
                     icon={ic_add}
                     onPress={() => navigation.navigate('Run')}
-                    extraStyle={{ marginRight: 15 }}
-                />
-                {/* <BottomBtn
-                    icon={ic_edit_date}
-                    onPress={() => navigation.navigate('Run')}
-                    extraStyle={{ marginRight: 15 }}
-                />
-                <BottomBtn
-                    icon={ic_delete}
-                    onPress={() => navigation.navigate('Run')}
-                /> */}
-                <BottomBtn
-                    icon={ic_history}
-                    onPress={() => navigation.navigate('History')}
-                />
+                    extraStyle={{ marginRight: 15 }} />
+                {date != TODAY &&
+                    <>
+                        <BottomBtn
+                            icon={ic_edit_date}
+                            extraStyle={{ marginRight: 15 }}
+                            onPress={() => setPromptData({
+                                visible: true,
+                                title: `Edit date`,
+                                message: 'Enter new date here',
+                                placeholder: 'Example: 12-Sep-22',
+                                buttons: [
+                                    {
+                                        text: 'OK', onPress: val => {
+                                            renameThisList(date, val, tasksList, setDate);
+                                            setPromptData({});
+                                        }
+                                    },
+                                    { text: 'Cancel', onPress: _ => setPromptData({}) },
+                                ]
+                            })} />
+                        <BottomBtn
+                            icon={ic_delete}
+                            onPress={() => {
+                                Alert.alert('Delete this List?'
+                                    , 'WARNING: All data in this page will be lost',
+                                    [
+                                        { text: 'Yes', onPress: () => deleteThisList(date, navigation) },
+                                        { text: 'No' }
+                                    ],
+                                    { cancelable: true })
+                            }} />
+                        <Prompt {...promptData} onPressOutside={() => setPromptData({})} />
+                    </>
+                }
+                {date == TODAY &&
+                    <BottomBtn
+                        icon={ic_history}
+                        onPress={() => navigation.navigate('History')} />
+                }
             </View>
         </View>
     );
