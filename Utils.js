@@ -34,6 +34,15 @@ const stringifyTime_2 = totalMillis => {
     return ss.substring(0, ss.length - 2);
 }
 
+const COLOR = {
+    primary: '#2a2a2a',
+    primaryLight: '#404040',
+    primaryDark: '#171717',
+    anti: '#bbb',
+    antiPlus: '#ddd',
+    antiMinus: '#888',
+};
+
 
 const createNewTask = (exercise_name, start_time = getCurrentTimeMins()) => {
     return {
@@ -137,5 +146,5 @@ const repcountFormat = repc => {
 export {
     createNewTask, repcountFormat,
     parseDate, parseTime_1, parseTime_2, stringifyDate, stringifyTime_1, stringifyTime_2,
-    consoleLogDb, setTestDb,
+    consoleLogDb, setTestDb, COLOR,
 }

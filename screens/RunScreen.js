@@ -4,11 +4,12 @@ import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/
 import DropdownComponent from "../components/Dropdown";
 import Prompt from "../components/Prompt";
 import StopWatch from "../components/StopWatch";
-import { createNewTask, parseTime_1, parseTime_2, repcountFormat, stringifyTime_1, stringifyTime_2 } from "../Utils";
+import { COLOR, createNewTask, parseTime_1, parseTime_2, repcountFormat, stringifyTime_1, stringifyTime_2 } from "../Utils";
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, padding: 10
+        flex: 1, padding: 10,
+        backgroundColor: COLOR.primaryDark,
     },
     G_startTime: {
         flexDirection: 'row',
@@ -18,15 +19,16 @@ const styles = StyleSheet.create({
     },
     startTime_label: {
         fontSize: 18,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: COLOR.anti,
     },
     startTime: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#555'
+        color: COLOR.antiMinus,
     },
     dropdown_btn: {
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.primary,
         padding: 12,
         paddingHorizontal: 20,
         elevation: 2,
@@ -36,12 +38,24 @@ const styles = StyleSheet.create({
     dropdown_btn_txt: {
         fontSize: 26,
         marginTop: -4,
+        color: COLOR.anti,
     },
     dropdown_all: {
-        overlayStyle: { alignItems: 'center', backgroundColor: '#2222' },
-        dropdownStyle: {
+        overlayStyle: { alignItems: 'center', backgroundColor: COLOR.primaryDark + '99' },
+        style: {
+            backgroundColor: COLOR.primary,
             borderBottomLeftRadius: 6, borderBottomRightRadius: 6,
-            maxHeight: 400
+        },
+        searchStyle: {
+            color: COLOR.anti,
+            placeholderTextColor: COLOR.antiMinus,
+            borderColor: COLOR.antiMinus,
+        },
+        itemStyle: {
+            borderColor: COLOR.antiMinus,
+        },
+        itemTextStyle: {
+            color: COLOR.anti,
         }
     },
     G_timeDisplay: {
@@ -50,7 +64,8 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 8, borderBottomRightRadius: 8,
         elevation: 2,
         marginVertical: 10,
-        paddingVertical: 12
+        paddingVertical: 12,
+        backgroundColor: COLOR.primary,
     },
     time_btn: {
         backgroundColor: '#fff',
@@ -62,18 +77,21 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         elevation: 2,
         marginBottom: 10,
+        backgroundColor: COLOR.primary,
     },
     time_btn_ic: {
-        width: 30, height: 30, elevation: 3
+        width: 30, height: 30, elevation: 3, tintColor: COLOR.anti
     },
     reps_input: {
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.primary,
+        color: COLOR.anti,
         borderRadius: 6,
         elevation: 2,
         paddingHorizontal: 8, paddingVertical: 4,
     },
     notes_input: {
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.primary,
+        color: COLOR.anti,
         borderRadius: 6,
         elevation: 2,
         paddingHorizontal: 8, paddingVertical: 4,
@@ -87,7 +105,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     action_btn: {
-        backgroundColor: '#222',
+        backgroundColor: COLOR.primary,
         marginHorizontal: 10,
         width: '30%',
         padding: 10,
@@ -95,7 +113,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     action_btn_txt: {
-        color: '#f2f2f2', fontSize: 16
+        color: COLOR.anti, fontSize: 16
     },
     restEditComp: {
         backgroundColor: '#fff',
@@ -126,13 +144,13 @@ const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checked
         checkBox: {
             paddingHorizontal: 10, paddingVertical: 6,
             alignSelf: 'stretch',
-            borderRadius: 4, borderWidth: 0.6, borderColor: '#555',
+            borderRadius: 4, borderWidth: 0.6, borderColor: COLOR.anti,
             marginBottom: 8
         },
-        checkBox_iconStyle: { borderColor: '#000' },
-        checkBox_textStyle: { color: '#000', fontSize: 18, textAlign: 'center' },
-        label: { fontSize: 16, paddingLeft: 10 },
-        stopWatch: { fontSize: 26, paddingLeft: 10 }
+        checkBox_iconStyle: { backgroundColor: COLOR.antiMinus },
+        checkBox_textStyle: { color: COLOR.anti, fontSize: 18, textAlign: 'center' },
+        label: { fontSize: 16, paddingLeft: 10, color: COLOR.anti, },
+        stopWatch: { fontSize: 26, paddingLeft: 10, color: COLOR.anti, }
     });
     return <View
         style={[_styles.container, extraStyle]}
@@ -143,6 +161,7 @@ const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checked
 
             style={_styles.checkBox}
             iconStyle={_styles.checkBox_iconStyle}
+            innerIconStyle={{ borderColor: COLOR.anti }}
             textStyle={_styles.checkBox_textStyle}
 
             isChecked={hideChecked}
@@ -298,7 +317,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
                 <TimeDisplay
                     label='Total time'
                     timerOn={totalTimerOn}
-                    extraStyle={{ borderRightWidth: 0.9, borderColor: '#888' }}
+                    extraStyle={{ borderRightWidth: 0.9, borderColor: COLOR.anti }}
                     setTime={setTotalTime}
                     initialTime={deTotalTime}
                     checkedState={[hideTotalTime, setHideTotalTime]}
@@ -323,6 +342,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
             <TextInput
                 ref={repcountInput}
                 placeholder="Enter your reps (optional)"
+                placeholderTextColor={COLOR.antiMinus}
                 value={repcount}
                 style={styles.reps_input}
                 onChangeText={text => setRepcount(text)}
@@ -333,6 +353,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
             <TextInput
                 ref={notesInput}
                 placeholder="Enter your notes (optional)"
+                placeholderTextColor={COLOR.antiMinus}
                 value={notes}
                 style={styles.notes_input}
                 multiline={true}

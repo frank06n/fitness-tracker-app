@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, FlatList, Modal, StyleSheet, Text, TouchableOpacity, Image, TextInput, Alert } from 'react-native';
+import { View, FlatList, Modal, StyleSheet, Text, TouchableOpacity, Image, TextInput } from 'react-native';
 // https://blog.logrocket.com/creating-custom-react-native-dropdown/
 
 // dropdownAllStyles = { style, overlayStyle, searchStyle, itemStyle, itemTextStyle }
@@ -9,6 +9,7 @@ const DDSearch = ({ customStyle, placeholder, searchTerm, setSearchTerm }) => {
     return <TextInput
         style={[styles.search, customStyle]}
         placeholder={placeholder}
+        placeholderTextColor={customStyle && customStyle.placeholderTextColor}
         value={searchTerm}
         onChangeText={(text) => {
             setSearchTerm(text);
@@ -86,7 +87,7 @@ const DropdownComponent = (props) => {
 
     const openDropdown = () => {
         Self.current.measure((_fx, _fy, w, h, _px, py) => {
-            set_ddTop(py + h - 36.33);
+            set_ddTop(py + h);
             set_ddWidth(w);
         });
         setVisible(true);

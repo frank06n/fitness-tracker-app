@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { stringifyDate } from "../Utils";
+import { COLOR, stringifyDate } from "../Utils";
 
 
 const TODAY = stringifyDate(new Date());
@@ -50,7 +50,7 @@ const HistoryScreen = ({ navigation }) => {
             }}
         >
             <Image
-                style={{ width: 25, height: 25 }}
+                style={{ width: 25, height: 25, tintColor: COLOR.anti }}
                 source={require('../assets/images/ic_add.png')}
             />
         </TouchableOpacity>
@@ -60,6 +60,7 @@ const HistoryScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: COLOR.primaryDark,
     },
     list: {
         flex: 1,
@@ -73,15 +74,16 @@ const styles = StyleSheet.create({
         marginVertical: 4,
 
         borderRadius: 5,
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.primary,
         elevation: 2,
     },
     list_item_txt: {
         fontSize: 16,
+        color: COLOR.anti,
     },
     add: {
         width: '100%',
-        backgroundColor: 'white',
+        backgroundColor: COLOR.primary,
         elevation: 10,
         padding: 14,
         alignItems: 'center'

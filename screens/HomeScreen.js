@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet, FlatList, Image, Alert } from "react-native";
 import TaskComp from "../components/TaskComp";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { stringifyDate } from "../Utils";
+import { COLOR, stringifyDate } from "../Utils";
 import Prompt from "../components/Prompt";
 
 const TODAY = stringifyDate(new Date());
@@ -16,7 +16,7 @@ const loadTasks = (date, setTasksList) => {
 
 const saveTasks = (date, tasksList) => {
     AsyncStorage.setItem(listKey_ofDate(date), JSON.stringify(tasksList))
-        .then(_ => console.log('save success'))
+        // .then(_ => console.log('save success'))
         .catch(error => console.log('save tasks error', error));
 };
 
@@ -175,12 +175,12 @@ const HomeScreen = ({ navigation, route: { params } }) => {
 
 const BottomBtn = ({ onPress, icon, extraStyle }) => {
     return <TouchableOpacity
-        activeOpacity={1}
+        activeOpacity={0.7}
         style={[styles.bottom_btn, extraStyle]}
         onPress={onPress}
     >
         <Image
-            style={{ width: 25, height: 25 }}
+            style={{ width: 25, height: 25, tintColor: COLOR.anti }}
             source={icon}
         />
     </TouchableOpacity>;
@@ -188,22 +188,23 @@ const BottomBtn = ({ onPress, icon, extraStyle }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: COLOR.primaryDark,
     },
     G_bottom_btns: {
         flexDirection: 'row',
         height: 50,
         paddingHorizontal: 15, paddingTop: 8,
         elevation: 6,
-        backgroundColor: '#fff'
+        backgroundColor: COLOR.primary
     },
     bottom_btn: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#fff',
-        elevation: 6,
-        borderWidth: 0.2, borderColor: '#999', borderBottomWidth: 0,
+        backgroundColor: COLOR.primary,
+        elevation: 8,
+        borderWidth: 1, borderColor: COLOR.primaryDark, borderBottomWidth: 0,
         borderTopRightRadius: 6, borderTopLeftRadius: 6,
     },
     bottom_btn_txt: {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Menu, MenuItem } from "react-native-material-menu";
-import { stringifyTime_1, stringifyTime_2 } from "../Utils";
+import { COLOR, stringifyTime_1, stringifyTime_2 } from "../Utils";
 
 const styles = StyleSheet.create({
     container: {
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         marginVertical: 4,
 
         borderRadius: 5,
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.primary,
         elevation: 2,
     },
     firstRow: {
@@ -23,13 +23,15 @@ const styles = StyleSheet.create({
     exercise_name: {
         flex: 1,
         fontSize: 18,
+        color: COLOR.antiPlus,
     },
     start_time: {
         textAlignVertical: 'center',
-        marginRight: 5
+        marginRight: 5,
+        color: COLOR.antiPlus,
     },
     editBtn_img: {
-        width: 20, height: 20
+        width: 20, height: 20, tintColor: COLOR.antiPlus
     },
     secondRow: {
         flexDirection: 'row',
@@ -37,15 +39,17 @@ const styles = StyleSheet.create({
         marginRight: 12, marginLeft: 6,
     },
     secondRow_item: {
-        fontSize: 12
+        fontSize: 12,
+        color: COLOR.anti,
     },
     notesText: {
         fontSize: 12,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: COLOR.primaryLight,
         marginRight: 10, marginLeft: 4, marginTop: 12,
         borderRadius: 6,
         paddingHorizontal: 6, paddingVertical: 4,
         elevation: 1.8,
+        color: COLOR.anti,
     }
 })
 

@@ -14,15 +14,14 @@
     "@react-navigation/native-stack": "^6.9.0",
     "dateformat": "^5.0.3",
     "expo": "~46.0.9",
-    "expo-status-bar": "~1.4.0",
+    "expo-updates": "~0.14.6",
     "prop-types": "^15.8.1",
     "react": "18.0.0",
     "react-native": "0.69.6",
     "react-native-bouncy-checkbox": "^3.0.4",
     "react-native-material-menu": "^2.0.0",
     "react-native-safe-area-context": "^4.3.1",
-    "react-native-screens": "~3.15.0",
-    "expo-updates": "~0.14.6"
+    "react-native-screens": "~3.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
