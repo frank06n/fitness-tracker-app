@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     },
     G_timeDisplay: {
         flexDirection: 'row',
-        backgroundColor: '#fff',
         borderBottomLeftRadius: 8, borderBottomRightRadius: 8,
         elevation: 2,
         marginVertical: 10,
@@ -68,7 +67,6 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR.primary,
     },
     time_btn: {
-        backgroundColor: '#fff',
         width: 80,
         height: 50,
         borderRadius: 16,
@@ -116,7 +114,7 @@ const styles = StyleSheet.create({
         color: COLOR.anti, fontSize: 16
     },
     restEditComp: {
-        backgroundColor: '#fff',
+        backgroundColor: COLOR.primary,
         borderRadius: 8,
         elevation: 2,
         padding: 16,
@@ -127,11 +125,14 @@ const styles = StyleSheet.create({
     restEditComp_btn: {
         width: '60%',
         paddingHorizontal: 8, paddingVertical: 6,
-        borderRadius: 4, borderWidth: 0.3, borderColor: '#555',
+        borderRadius: 4, borderWidth: 0.3, borderColor: COLOR.primaryDark,
         marginBottom: 8,
-        backgroundColor: '#fff',
-        elevation: 1,
+        backgroundColor: COLOR.primary,
+        elevation: 4,
         alignItems: 'center'
+    },
+    restEditComp_btn_txt: {
+        color: COLOR.anti,
     }
 });
 
@@ -202,11 +203,11 @@ const RestEditComp_btn = (txt, value, setTimeValue, setPromptData) => <Touchable
                     setPromptData({});
                 }
             },
-            { text: 'Cancel', onPress: _ => setPromptData({}) },
+            { text: 'CANCEL', onPress: _ => setPromptData({}) },
         ]
     })}
 >
-    <Text>{`Edit ${txt} time`}</Text>
+    <Text style={styles.restEditComp_btn_txt}>{`Edit ${txt} time`}</Text>
 </TouchableOpacity>;
 
 const RestEditComp = ({ startTime, setStartTime, totalTime, setTotalTime, workTime, setWorkTime }) => {

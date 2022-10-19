@@ -146,7 +146,7 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                                             setPromptData({});
                                         }
                                     },
-                                    { text: 'Cancel', onPress: _ => setPromptData({}) },
+                                    { text: 'CANCEL', onPress: _ => setPromptData({}) },
                                 ]
                             })} />
                         <BottomBtn

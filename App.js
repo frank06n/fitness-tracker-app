@@ -16,7 +16,8 @@ function App() {
 	const options = {
 		statusBarColor: COLOR.primaryDark,
 		headerTintColor: COLOR.anti,
-		headerStyle: { backgroundColor: COLOR.primary }
+		headerStyle: { backgroundColor: COLOR.primary },
+		animation: 'fade_from_bottom',
 	};
 	return (
 		<NavigationContainer>

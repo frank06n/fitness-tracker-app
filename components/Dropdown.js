@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { View, FlatList, Modal, StyleSheet, Text, TouchableOpacity, Image, TextInput } from 'react-native';
+import { COLOR } from '../Utils';
 // https://blog.logrocket.com/creating-custom-react-native-dropdown/
 
 // dropdownAllStyles = { style, overlayStyle, searchStyle, itemStyle, itemTextStyle }
@@ -117,7 +118,7 @@ const DropdownComponent = (props) => {
         <Text style={[styles.buttonText, textStyle]}>{selected ? selected.label : label}</Text>
         {
             icon ? icon :
-                <Image style={{ width: 20, height: 20 }} source={{ uri: 'https://www.iconpacks.net/icons/2/free-arrow-down-icon-3101-thumb.png' }} />
+                <Image style={{ width: 20, height: 20, tintColor: COLOR.anti }} source={{ uri: 'https://www.iconpacks.net/icons/2/free-arrow-down-icon-3101-thumb.png' }} />
         }
     </TouchableOpacity >;
 }

@@ -52,16 +52,18 @@ const styles = StyleSheet.create({
     },
     dialog: {
         backgroundColor: '#fff',
-        paddingHorizontal: 16,
-        width: '90%',
-        borderRadius: 6,
-        paddingVertical: 12,
+        paddingHorizontal: 22,
+        width: '88%',
+        borderRadius: 2,
+        paddingVertical: 16,
     },
     title: {
-        fontSize: 24,
-        marginBottom: 10,
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 8,
     },
     message: {
+        fontSize: 16,
         marginBottom: 8,
     },
     prompt: {
@@ -76,12 +78,12 @@ const styles = StyleSheet.create({
     },
     btnGrp_btn: {
         padding: 2, paddingHorizontal: 10,
-        marginTop: 8,
+        marginTop: 14,
         marginLeft: 8,
     },
     btnGrp_btn_txt: {
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 14,
     },
 
 });
