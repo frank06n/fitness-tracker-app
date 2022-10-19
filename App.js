@@ -6,7 +6,7 @@ import RunScreen from "./screens/RunScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLOR, consoleLogDb, setTestDb } from "./Utils";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+const Color = require('color');
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +15,7 @@ function App() {
 	//consoleLogDb();
 	const options = {
 		statusBarColor: COLOR.primaryDark,
+		statusBarStyle: Color(COLOR.primaryDark).isDark() ? 'light' : 'dark',
 		headerTintColor: COLOR.anti,
 		headerStyle: { backgroundColor: COLOR.primary },
 		animation: 'fade_from_bottom',
