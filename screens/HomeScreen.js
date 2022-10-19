@@ -175,7 +175,7 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                                 setMenuVisible(false);
                                 navigation.navigate('Exercises')
                             }}>Exercises</MenuItem>
-                            <MenuItem onPress={() => setPromptData({
+                            {/* <MenuItem onPress={() => setPromptData({
                                 visible: true,
                                 title: 'Change Theme',
                                 message: '',
@@ -188,8 +188,13 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                                     },
                                     { text: 'CANCEL', onPress: _ => setPromptData({}) },
                                 ]
-                            })}>Change Theme</MenuItem>
-                            <MenuItem>Developer Info</MenuItem>
+                            })}>Change Theme</MenuItem> */}
+                            <MenuItem onPress={() => Alert.alert(
+                                'App Info',
+                                'Developed by Pritam Das\n' +
+                                'for a Hackathon\n' +
+                                'Project started on 20 Sep 2022'
+                            )}>App Info</MenuItem>
                         </Menu>
                         <BottomBtn
                             icon={ic_settings}

@@ -42,14 +42,14 @@ const stringifyTime_2 = totalMillis => {
 //     antiPlus: '#ddd',
 //     antiMinus: '#888',
 // };
-// const COLOR = {
-//     primaryDark: '#002029',
-//     primary: '#00303d',
-//     primaryLight: '#004052',
-//     anti: '#bbb',
-//     antiPlus: '#ddd',
-//     antiMinus: '#888',
-// };
+const COLOR = {
+    primaryDark: '#002029',
+    primary: '#00303d',
+    primaryLight: '#004052',
+    anti: '#bbb',
+    antiPlus: '#ddd',
+    antiMinus: '#888',
+};
 // const COLOR = {
 //     primaryDark: '#e0e0e0',
 //     primary: '#fff',
@@ -58,14 +58,14 @@ const stringifyTime_2 = totalMillis => {
 //     antiPlus: '#000',
 //     antiMinus: '#666',
 // };
-const COLOR = {
-    primaryDark: '#bdf',
-    primary: '#eef6ff',
-    primaryLight: '#fff',
-    anti: '#045',
-    antiPlus: '#012',
-    antiMinus: '#357',
-};
+// const COLOR = {
+//     primaryDark: '#bdf',
+//     primary: '#eef6ff',
+//     primaryLight: '#fff',
+//     anti: '#045',
+//     antiPlus: '#012',
+//     antiMinus: '#357',
+// };
 
 
 const createNewTask = (exercise_name, start_time = getCurrentTimeMins()) => {
