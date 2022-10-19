@@ -34,13 +34,37 @@ const stringifyTime_2 = totalMillis => {
     return ss.substring(0, ss.length - 2);
 }
 
+// const COLOR = {
+//     primary: '#2a2a2a',
+//     primaryLight: '#404040',
+//     primaryDark: '#171717',
+//     anti: '#bbb',
+//     antiPlus: '#ddd',
+//     antiMinus: '#888',
+// };
+// const COLOR = {
+//     primaryDark: '#002029',
+//     primary: '#00303d',
+//     primaryLight: '#004052',
+//     anti: '#bbb',
+//     antiPlus: '#ddd',
+//     antiMinus: '#888',
+// };
+// const COLOR = {
+//     primaryDark: '#e0e0e0',
+//     primary: '#fff',
+//     primaryLight: '#f0f0f0',
+//     anti: '#3d3d3d',
+//     antiPlus: '#000',
+//     antiMinus: '#666',
+// };
 const COLOR = {
-    primary: '#2a2a2a',
-    primaryLight: '#404040',
-    primaryDark: '#171717',
-    anti: '#bbb',
-    antiPlus: '#ddd',
-    antiMinus: '#888',
+    primaryDark: '#bdf',
+    primary: '#eef6ff',
+    primaryLight: '#fff',
+    anti: '#045',
+    antiPlus: '#012',
+    antiMinus: '#357',
 };
 
 
@@ -107,6 +131,22 @@ const consoleLogDb = () => {
         });
 }
 
+const initExercisesDb = () => {
+    AsyncStorage.getItem('@exercises')
+        .then(value => {
+            value = JSON.parse(value);
+            if (value && value.length) return;
+            return AsyncStorage.setItem('@exercises', JSON.stringify([
+                'Walk', 'Run', 'Jumping Jacks', 'Skipping',
+                'Pushups', 'Pullups', 'Squats', 'Lunges',
+                'Burpees', 'Situps', 'Crunches', 'Russian Twists', 'Plank',
+                'Tricep Extensions', 'Tricep Dips', 'Bicep Curls', 'Benchpress',
+                'Hamstring Curls', 'Calf Raises',
+            ]));
+        });
+}
+
+
 // const GoalType = Object.freeze({
 //     REPS: Symbol(0),
 //     MAX_REPS: Symbol(1),
@@ -146,5 +186,5 @@ const repcountFormat = repc => {
 export {
     createNewTask, repcountFormat,
     parseDate, parseTime_1, parseTime_2, stringifyDate, stringifyTime_1, stringifyTime_2,
-    consoleLogDb, setTestDb, COLOR,
+    consoleLogDb, setTestDb, COLOR, initExercisesDb
 }

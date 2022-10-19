@@ -5,7 +5,8 @@ import HomeScreen from "./screens/HomeScreen";
 import RunScreen from "./screens/RunScreen";
 import HistoryScreen from "./screens/HistoryScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { COLOR, consoleLogDb, setTestDb } from "./Utils";
+import { COLOR, consoleLogDb, initExercisesDb, setTestDb } from "./Utils";
+import ExercisesScreen from "./screens/ExercisesScreen";
 const Color = require('color');
 
 const Stack = createNativeStackNavigator();
@@ -13,6 +14,7 @@ const Stack = createNativeStackNavigator();
 function App() {
 	//AsyncStorage.clear().then(setTestDb);
 	//consoleLogDb();
+	initExercisesDb();
 	const options = {
 		statusBarColor: COLOR.primaryDark,
 		statusBarStyle: Color(COLOR.primaryDark).isDark() ? 'light' : 'dark',
@@ -26,6 +28,7 @@ function App() {
 				<Stack.Screen name="Home" component={HomeScreen} options={options} />
 				<Stack.Screen name="Run" component={RunScreen} options={options} />
 				<Stack.Screen name="History" component={HistoryScreen} options={options} />
+				<Stack.Screen name="Exercises" component={ExercisesScreen} options={options} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

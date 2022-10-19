@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useRef, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button, Alert } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/WrathChaos/react-native-bouncy-checkbox
 import DropdownComponent from "../components/Dropdown";
@@ -100,7 +101,8 @@ const styles = StyleSheet.create({
     G_action: {
         flexDirection: 'row',
         marginTop: 30,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        elevation: 2,
     },
     action_btn: {
         backgroundColor: COLOR.primary,
@@ -108,10 +110,11 @@ const styles = StyleSheet.create({
         width: '30%',
         padding: 10,
         borderRadius: 6,
+        elevation: 2,
         alignItems: 'center'
     },
     action_btn_txt: {
-        color: COLOR.anti, fontSize: 16
+        color: COLOR.anti, fontSize: 16,
     },
     restEditComp: {
         backgroundColor: COLOR.primary,
@@ -128,7 +131,7 @@ const styles = StyleSheet.create({
         borderRadius: 4, borderWidth: 0.3, borderColor: COLOR.primaryDark,
         marginBottom: 8,
         backgroundColor: COLOR.primary,
-        elevation: 4,
+        elevation: 2,
         alignItems: 'center'
     },
     restEditComp_btn_txt: {
@@ -148,7 +151,7 @@ const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checked
             borderRadius: 4, borderWidth: 0.6, borderColor: COLOR.anti,
             marginBottom: 8
         },
-        checkBox_iconStyle: { backgroundColor: COLOR.antiMinus },
+        checkbox_innerIconStyle: { borderColor: COLOR.anti, backgroundColor: COLOR.primaryLight },
         checkBox_textStyle: { color: COLOR.anti, fontSize: 18, textAlign: 'center' },
         label: { fontSize: 16, paddingLeft: 10, color: COLOR.anti, },
         stopWatch: { fontSize: 26, paddingLeft: 10, color: COLOR.anti, }
@@ -161,8 +164,7 @@ const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checked
             size={20} fillColor="black" text="Hide"
 
             style={_styles.checkBox}
-            iconStyle={_styles.checkBox_iconStyle}
-            innerIconStyle={{ borderColor: COLOR.anti }}
+            innerIconStyle={_styles.checkbox_innerIconStyle}
             textStyle={_styles.checkBox_textStyle}
 
             isChecked={hideChecked}
@@ -221,19 +223,6 @@ const RestEditComp = ({ startTime, setStartTime, totalTime, setTotalTime, workTi
     </View>
 }
 
-const exerciseList = (() => {
-    const data = [
-        'Walk', 'Run', 'Jumping Jacks', 'Skipping',
-        'Pushups', 'Pullups', 'Squats', 'Lunges',
-        'Burpees', 'Situps', 'Crunches', 'Russian Twists', 'Plank',
-        'Tricep Extensions', 'Tricep Dips', 'Bicep Curls', 'Benchpress',
-        'Hamstring Curls', 'Calf Raises',
-    ];
-    for (let i = 0; i < data.length; i++) {
-        data[i] = { label: data[i], value: i.toString() };
-    }
-    return data;
-})();
 const ic_play_src = require('../assets/images/ic_play.png');
 const ic_pause_src = require('../assets/images/ic_pause.png');
 
@@ -247,7 +236,8 @@ const RunScreen = ({ navigation, route: { params } }) => {
     const taskItem = editTaskItem ? params.taskItem : createNewTask(undefined);
     const taskIndex = editTaskItem ? params.taskIndex : -1;
 
-    const [exerciseName, setExername] = useState(taskItem.exercise_name);
+    const [exerciseList, setExerciseList] = useState([]);
+    const [exerciseName, setExerciseName] = useState(taskItem.exercise_name);
     const [startTime, setStartTime] = useState(taskItem.start_time);
     const [totalTime, setTotalTime] = useState(taskItem.total_time);
     const [workTime, setWorkTime] = useState(taskItem.work_time);
@@ -259,12 +249,10 @@ const RunScreen = ({ navigation, route: { params } }) => {
     const [deTotalTime, setDeTotalTime] = useState(taskItem.total_time);
     const [deWorkTime, setDeWorkTime] = useState(taskItem.work_time);
 
-    const calculateSelectedItem = () => {
-        for (let item of exerciseList)
-            if (item.label == exerciseName)
-                return item;
-        return undefined;
-    }
+    useEffect(() => {
+        AsyncStorage.getItem('@exercises')
+            .then(value => setExerciseList(JSON.parse(value)));
+    }, []);
 
     const returnTaskItem = () => {
         // if exercise not selected, show message, {INVALID}
@@ -308,8 +296,8 @@ const RunScreen = ({ navigation, route: { params } }) => {
             </View>
             <DropdownComponent
                 label="Select Exercise" data={exerciseList}
-                selectedItem={calculateSelectedItem()}
-                onSelect={(item) => { setExername(item.label) }}
+                selectedItem={exerciseName}
+                onSelect={setExerciseName}
                 style={styles.dropdown_btn}
                 textStyle={styles.dropdown_btn_txt}
                 dropdownAllStyles={styles.dropdown_all}

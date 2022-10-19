@@ -24,13 +24,13 @@ const DDItem = ({ index, item, displayData, customStyle, customTextStyle, onPres
     if (customStyle) mstyle.push(customStyle);
 
     return <TouchableOpacity style={mstyle} onPress={() => onPress(item)}>
-        <Text style={customTextStyle}>{item.label}</Text>
+        <Text style={customTextStyle}>{item}</Text>
     </TouchableOpacity>
 };
 
 const Dropdown = ({ onPressOutside, data, onSelect, allStyles }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const displayData = data.filter((item) => item.label.toLowerCase().startsWith(searchTerm.toLowerCase()));
+    const displayData = data.filter((item) => item.toLowerCase().startsWith(searchTerm.toLowerCase()));
     const { style, overlayStyle, searchStyle, itemStyle, itemTextStyle } = allStyles;
 
     return (
@@ -78,7 +78,6 @@ const DropdownComponent = (props) => {
     } = props;
 
     const [visible, setVisible] = useState(false);
-    const [selected, setSelected] = useState(selectedItem);
 
     const [ddTop, set_ddTop] = useState(0);
     const [ddWidth, set_ddWidth] = useState('100%');
@@ -108,14 +107,13 @@ const DropdownComponent = (props) => {
                 onPressOutside={toggleDropdown}
                 data={data}
                 onSelect={(item) => {
-                    setSelected(item);
                     onSelect(item);
                     setVisible(false);
                 }}
                 allStyles={d_allStyles}
             />
         }
-        <Text style={[styles.buttonText, textStyle]}>{selected ? selected.label : label}</Text>
+        <Text style={[styles.buttonText, textStyle]}>{selectedItem || label}</Text>
         {
             icon ? icon :
                 <Image style={{ width: 20, height: 20, tintColor: COLOR.anti }} source={{ uri: 'https://www.iconpacks.net/icons/2/free-arrow-down-icon-3101-thumb.png' }} />
