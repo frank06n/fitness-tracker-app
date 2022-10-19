@@ -4,6 +4,7 @@ import TaskComp from "../components/TaskComp";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLOR, stringifyDate } from "../Utils";
 import Prompt from "../components/Prompt";
+import { Menu, MenuItem } from "react-native-material-menu";
 
 const TODAY = stringifyDate(new Date());
 const listKey_ofDate = date => '@listOf_' + date;
@@ -74,11 +75,13 @@ const ic_add = require('../assets/images/ic_add.png');
 const ic_delete = require('../assets/images/ic_delete.png');
 const ic_edit_date = require('../assets/images/ic_edit_date.png');
 const ic_history = require('../assets/images/ic_history.png');
+const ic_settings = require('../assets/images/ic_settings.png');
 
 const HomeScreen = ({ navigation, route: { params } }) => {
     const [tasksList, setTasksList] = useState([]);
     const [date, setDate] = useState(TODAY);
     const [promptData, setPromptData] = useState({});
+    const [menuVisible, setMenuVisible] = useState(false);
 
     const removeTask = n => {
         const newList = [...tasksList];
@@ -160,14 +163,44 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                                     ],
                                     { cancelable: true })
                             }} />
-                        <Prompt {...promptData} onPressOutside={() => setPromptData({})} />
                     </>
                 }
                 {date == TODAY &&
-                    <BottomBtn
-                        icon={ic_history}
-                        onPress={() => navigation.navigate('History')} />
+                    <>
+                        <Menu
+                            visible={menuVisible}
+                            onRequestClose={() => setMenuVisible(false)}
+                        >
+                            <MenuItem onPress={() => {
+                                setMenuVisible(false);
+                                navigation.navigate('Exercises')
+                            }}>Exercises</MenuItem>
+                            <MenuItem onPress={() => setPromptData({
+                                visible: true,
+                                title: 'Change Theme',
+                                message: '',
+                                buttons: [
+                                    {
+                                        text: 'OK', onPress: val => {
+                                            renameThisList(date, val, tasksList, setDate);
+                                            setPromptData({});
+                                        }
+                                    },
+                                    { text: 'CANCEL', onPress: _ => setPromptData({}) },
+                                ]
+                            })}>Change Theme</MenuItem>
+                            <MenuItem>Developer Info</MenuItem>
+                        </Menu>
+                        <BottomBtn
+                            icon={ic_settings}
+                            onPress={() => setMenuVisible(true)}
+                            extraStyle={{ marginRight: 15 }} />
+                        <BottomBtn
+                            icon={ic_history}
+                            onPress={() => navigation.navigate('History')} />
+                    </>
                 }
+                <Prompt {...promptData} onPressOutside={() => setPromptData({})} />
             </View>
         </View>
     );
