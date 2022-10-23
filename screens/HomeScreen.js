@@ -205,7 +205,7 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                             onPress={() => navigation.navigate('History')} />
                     </>
                 }
-                <Prompt {...promptData} onPressOutside={() => setPromptData({})} />
+                <Prompt {...promptData} onRequestClose={() => setPromptData({})} />
             </View>
         </View>
     );

@@ -89,7 +89,7 @@ const ExercisesScreen = ({ navigation }) => {
                 source={require('../assets/images/ic_add.png')}
             />
         </TouchableOpacity>
-        <Prompt {...promptData} onPressOutside={() => setPromptData({})} />
+        <Prompt {...promptData} onRequestClose={() => setPromptData({})} />
     </View>
 };
 

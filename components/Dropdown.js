@@ -28,16 +28,16 @@ const DDItem = ({ index, item, displayData, customStyle, customTextStyle, onPres
     </TouchableOpacity>
 };
 
-const Dropdown = ({ onPressOutside, data, onSelect, allStyles }) => {
+const Dropdown = ({ onRequestClose, data, onSelect, allStyles }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const displayData = data.filter((item) => item.toLowerCase().startsWith(searchTerm.toLowerCase()));
     const { style, overlayStyle, searchStyle, itemStyle, itemTextStyle } = allStyles;
 
     return (
-        <Modal visible={true} transparent animationType="fade">
+        <Modal visible={true} transparent animationType="fade" onRequestClose={onRequestClose}>
             <TouchableOpacity
                 style={[styles.overlay, overlayStyle]}
-                onPress={onPressOutside}
+                onPress={onRequestClose}
             >
                 <View style={[styles.dropdown, style]}>
                     <DDSearch
@@ -104,7 +104,7 @@ const DropdownComponent = (props) => {
         {
             visible &&
             <Dropdown
-                onPressOutside={toggleDropdown}
+                onRequestClose={toggleDropdown}
                 data={data}
                 onSelect={(item) => {
                     onSelect(item);

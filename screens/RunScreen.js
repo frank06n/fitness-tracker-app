@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useRef, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button, Alert, ScrollView, BackHandler } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox"; //https://github.com/WrathChaos/react-native-bouncy-checkbox
 import DropdownComponent from "../components/Dropdown";
 import Prompt from "../components/Prompt";
@@ -219,7 +219,7 @@ const RestEditComp = ({ startTime, setStartTime, totalTime, setTotalTime, workTi
         {RestEditComp_btn('Start', startTime, setStartTime, setPromptData)}
         {RestEditComp_btn('Total', totalTime, setTotalTime, setPromptData)}
         {RestEditComp_btn('Work', workTime, setWorkTime, setPromptData)}
-        <Prompt {...promptData} onPressOutside={() => setPromptData({})} />
+        <Prompt {...promptData} onRequestClose={() => setPromptData({})} />
     </View>
 }
 
@@ -249,26 +249,49 @@ const RunScreen = ({ navigation, route: { params } }) => {
     const [deTotalTime, setDeTotalTime] = useState(taskItem.total_time);
     const [deWorkTime, setDeWorkTime] = useState(taskItem.work_time);
 
+    const onRequestTaskCancel = () => {
+        Alert.alert(
+            'Cancel this Task?',
+            'WARNING: Data in this page will be lost!',
+            [
+                { text: 'Yes', onPress: () => navigation.navigate('Home') },
+                { text: 'No' }
+            ],
+            { cancelable: true }
+        )
+        return true; // for back handler
+    }
+
     useEffect(() => {
         AsyncStorage.getItem('@exercises')
             .then(value => setExerciseList(JSON.parse(value)));
+        navigation.setOptions({
+            headerLeft: () => <></>,
+        });
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            onRequestTaskCancel
+        );
+
+        return () => backHandler.remove();
     }, []);
 
     const returnTaskItem = () => {
-        // if exercise not selected, show message, {INVALID}
+        let hideBothTimers = false;
+
         if (!exerciseName) {
             Alert.alert('Select Exercise', 'No exercise is selected!', [{ text: 'OK' }]);
             return;
         }
-        // if timer not started, hide both times
-        if (!totalTime) {
-            setHideTotalTime(true);
-            setHideWorkTime(true);
-        }
-        else {
-            // stop both timers
-            setTotalTimerOn(false);
-            setWorkTimerOn(false);
+
+        if (!editTaskItem) {
+            if (!totalTime) {
+                hideBothTimers = true;
+            }
+            else {
+                setTotalTimerOn(false);
+                setWorkTimerOn(false);
+            }
         }
         // if repcount in focus, blur, format
         if (repcountInput.current.isFocused()) repcountInput.current.blur();
@@ -280,8 +303,8 @@ const RunScreen = ({ navigation, route: { params } }) => {
             start_time: startTime,
             total_time: totalTime,
             work_time: workTime,
-            hide_total_time: hideTotalTime,
-            hide_work_time: hideWorkTime,
+            hide_total_time: hideBothTimers || hideTotalTime,
+            hide_work_time: hideBothTimers || hideWorkTime,
             rep_count: repcountFormat(repcount),
             notes: notes
         };
@@ -289,7 +312,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.G_startTime}>
                 <Text style={styles.startTime_label}>{'Start time:'}</Text>
                 <Text style={styles.startTime}>{stringifyTime_1(startTime)}</Text>
@@ -354,23 +377,13 @@ const RunScreen = ({ navigation, route: { params } }) => {
                     startTime={startTime}
                     setStartTime={setStartTime}
                     totalTime={totalTime}
-                    setTotalTime={setDeTotalTime}
+                    setTotalTime={time => { setDeTotalTime(time); setTotalTime(time) }}
                     workTime={workTime}
-                    setWorkTime={setDeWorkTime}
+                    setWorkTime={time => { setDeWorkTime(time); setWorkTime(time) }}
                 />
             }
             <View style={styles.G_action}>
-                <TouchableOpacity style={styles.action_btn} onPress={() => {
-                    Alert.alert(
-                        'Cancel this Task?',
-                        'WARNING: Data in this page will be lost!',
-                        [
-                            { text: 'Yes', onPress: () => navigation.navigate('Home') },
-                            { text: 'No' }
-                        ],
-                        { cancelable: true }
-                    )
-                }}>
+                <TouchableOpacity style={styles.action_btn} onPress={onRequestTaskCancel}>
                     <Text style={styles.action_btn_txt}>{'CANCEL'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.action_btn} onPress={() => {
@@ -386,7 +399,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
                     <Text style={styles.action_btn_txt}>{'SAVE'}</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 

@@ -17,14 +17,14 @@ const BtnGrp = ({ buttons, onValueAsked }) => {
     </View>;
 }
 
-const Prompt = ({ title = 'Prompt', message, defaultValue, placeholder, buttons, onPressOutside, visible = false }) => {
+const Prompt = ({ title = 'Prompt', message, defaultValue, placeholder, buttons, onRequestClose, visible = false }) => {
     const [value, setValue] = useState();
     const onValueAsked = _ => value;
     return (
-        <Modal visible={visible} transparent animationType="fade">
+        <Modal visible={visible} transparent animationType="fade" onRequestClose={onRequestClose}>
             <TouchableOpacity
                 style={styles.overlay}
-                onPress={onPressOutside}
+                onPress={onRequestClose}
             >
                 <View style={styles.dialog}>
                     <Text style={styles.title}>{title}</Text>
@@ -36,7 +36,8 @@ const Prompt = ({ title = 'Prompt', message, defaultValue, placeholder, buttons,
                         style={styles.prompt}
                         defaultValue={defaultValue}
                         placeholder={placeholder}
-                        onChangeText={text => setValue(text)} />
+                        onChangeText={text => setValue(text)}
+                        underlineColorAndroid={'#0c5aad'} />
                     <BtnGrp buttons={buttons} onValueAsked={onValueAsked} />
                 </View>
             </TouchableOpacity>
@@ -60,17 +61,15 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 8,
+        marginBottom: 6,
+        marginTop: 4,
     },
     message: {
         fontSize: 16,
-        marginBottom: 8,
     },
     prompt: {
-        backgroundColor: '#f0f0f0',
-        borderRadius: 6,
-        borderColor: '#999', borderWidth: 0.8,
-        paddingHorizontal: 8,
+        padding: 6, paddingTop: 0,
+        marginHorizontal: -4,
     },
     btnGrp: {
         flexDirection: 'row',
@@ -78,12 +77,13 @@ const styles = StyleSheet.create({
     },
     btnGrp_btn: {
         padding: 2, paddingHorizontal: 10,
-        marginTop: 14,
+        marginTop: 8,
         marginLeft: 8,
     },
     btnGrp_btn_txt: {
         fontWeight: 'bold',
         fontSize: 14,
+        color: '#0c5aad'
     },
 
 });

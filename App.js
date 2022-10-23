@@ -4,16 +4,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import RunScreen from "./screens/RunScreen";
 import HistoryScreen from "./screens/HistoryScreen";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { COLOR, consoleLogDb, initExercisesDb, setTestDb } from "./Utils";
+import { COLOR, initExercisesDb } from "./Utils";
 import ExercisesScreen from "./screens/ExercisesScreen";
 const Color = require('color');
 
 const Stack = createNativeStackNavigator();
 
 function App() {
-	//AsyncStorage.clear().then(setTestDb);
-	//consoleLogDb();
 	initExercisesDb();
 	const options = {
 		statusBarColor: COLOR.primaryDark,
