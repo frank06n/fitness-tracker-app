@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     },
     G_action: {
         flexDirection: 'row',
-        marginTop: 30,
+        marginVertical: 30,
         justifyContent: 'center',
         elevation: 2,
     },
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checkedState }) => {
+const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checkedState, precision }) => {
     const [hideChecked, setHideChecked] = checkedState;
     const _styles = StyleSheet.create({
         container: {
@@ -177,6 +177,7 @@ const TimeDisplay = ({ label, timerOn, extraStyle, setTime, initialTime, checked
             start={timerOn}
             setTime={setTime}
             startTime={initialTime}
+            updateInterval={precision == 'lazy' ? 1000 : precision == 'mid' ? 500 : 100}
         />
     </View>;
 }
@@ -248,6 +249,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
 
     const [deTotalTime, setDeTotalTime] = useState(taskItem.total_time);
     const [deWorkTime, setDeWorkTime] = useState(taskItem.work_time);
+    const [timerPrecision, setTimerPrecision] = useState('mid');
 
     const onRequestTaskCancel = () => {
         Alert.alert(
@@ -265,8 +267,14 @@ const RunScreen = ({ navigation, route: { params } }) => {
     useEffect(() => {
         AsyncStorage.getItem('@exercises')
             .then(value => setExerciseList(JSON.parse(value)));
+        AsyncStorage.getItem('@timerPrecision')
+            .then(value => {
+                if (value) setTimerPrecision(value);
+                else AsyncStorage.setItem('@timerPrecision', 'mid');
+            });
         navigation.setOptions({
             headerLeft: () => <></>,
+            title: editTaskItem ? 'Edit Task' : 'Create Task',
         });
         const backHandler = BackHandler.addEventListener(
             "hardwareBackPress",
@@ -333,6 +341,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
                     setTime={setTotalTime}
                     initialTime={deTotalTime}
                     checkedState={[hideTotalTime, setHideTotalTime]}
+                    precision={timerPrecision}
                 />
                 <TimeDisplay
                     label='Work time'
@@ -340,6 +349,7 @@ const RunScreen = ({ navigation, route: { params } }) => {
                     setTime={setWorkTime}
                     initialTime={deWorkTime}
                     checkedState={[hideWorkTime, setHideWorkTime]}
+                    precision={timerPrecision}
                 />
             </View>
             {

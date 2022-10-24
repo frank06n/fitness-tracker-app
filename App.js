@@ -32,3 +32,10 @@ function App() {
 }
 
 export default App;
+
+/*
+Issues: StopWatch implementation uses too much CPU,
+due to repeated deep renders on each update (100ms on 'precise' mode)
+Soltuion maybe to keep state update only to the component,
+and derive some other way to pass back info
+*/

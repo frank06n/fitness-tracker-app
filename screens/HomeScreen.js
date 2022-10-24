@@ -107,6 +107,7 @@ const HomeScreen = ({ navigation, route: { params } }) => {
             else {
                 tasksList.push(params.taskItem);
             }
+            tasksList.sort((a, b) => a.start_time - b.start_time);
             saveTasks(date, tasksList);
             navigation.setParams({ taskItem: undefined });
         });
@@ -175,26 +176,47 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                                 setMenuVisible(false);
                                 navigation.navigate('Exercises')
                             }}>Exercises</MenuItem>
-                            {/* <MenuItem onPress={() => setPromptData({
-                                visible: true,
-                                title: 'Change Theme',
-                                message: '',
-                                buttons: [
-                                    {
-                                        text: 'OK', onPress: val => {
-                                            renameThisList(date, val, tasksList, setDate);
-                                            setPromptData({});
-                                        }
-                                    },
-                                    { text: 'CANCEL', onPress: _ => setPromptData({}) },
-                                ]
-                            })}>Change Theme</MenuItem> */}
-                            <MenuItem onPress={() => Alert.alert(
-                                'App Info',
-                                'Developed by Pritam Das\n' +
-                                'for a Hackathon\n' +
-                                'Project started on 20 Sep 2022'
-                            )}>App Info</MenuItem>
+                            <MenuItem onPress={() => {
+                                setMenuVisible(false);
+                                setPromptData({
+                                    visible: true,
+                                    title: `Edit Timer Precision`,
+                                    message: 'P: 0.1s\n'
+                                        + 'M: 0.5s, less lag\n'
+                                        + 'L: 1.0s, (use if low-end device)',
+                                    hidePromptField: true,
+                                    buttons: [
+                                        {
+                                            text: 'PRECISE', onPress: _ => {
+                                                AsyncStorage.setItem('@timerPrecision', 'precise');
+                                                setPromptData({});
+                                            }
+                                        },
+                                        {
+                                            text: 'MID', onPress: _ => {
+                                                AsyncStorage.setItem('@timerPrecision', 'mid');
+                                                setPromptData({});
+                                            }
+                                        },
+                                        {
+                                            text: 'LAZY', onPress: _ => {
+                                                AsyncStorage.setItem('@timerPrecision', 'lazy');
+                                                setPromptData({});
+                                            }
+                                        },
+                                    ]
+                                });
+                            }}>Timer precision</MenuItem>
+                            <MenuItem onPress={() => {
+                                setMenuVisible(false);
+                                Alert.alert(
+                                    'App Info',
+                                    '[Developer] Pritam Das\n' +
+                                    '~Made for a Hackathon\n' +
+                                    '[Start Date] 20 Sep 2022\n' +
+                                    '[App Version] 1.1.0'
+                                )
+                            }}>App Info</MenuItem>
                         </Menu>
                         <BottomBtn
                             icon={ic_settings}
@@ -207,7 +229,7 @@ const HomeScreen = ({ navigation, route: { params } }) => {
                 }
                 <Prompt {...promptData} onRequestClose={() => setPromptData({})} />
             </View>
-        </View>
+        </View >
     );
 }
 

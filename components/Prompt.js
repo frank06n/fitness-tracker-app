@@ -17,7 +17,7 @@ const BtnGrp = ({ buttons, onValueAsked }) => {
     </View>;
 }
 
-const Prompt = ({ title = 'Prompt', message, defaultValue, placeholder, buttons, onRequestClose, visible = false }) => {
+const Prompt = ({ title = 'Prompt', message, defaultValue, placeholder, buttons, onRequestClose, visible = false, hidePromptField = false }) => {
     const [value, setValue] = useState();
     const onValueAsked = _ => value;
     return (
@@ -32,12 +32,15 @@ const Prompt = ({ title = 'Prompt', message, defaultValue, placeholder, buttons,
                         !!message &&
                         <Text style={styles.message}>{message}</Text>
                     }
-                    <TextInput
-                        style={styles.prompt}
-                        defaultValue={defaultValue}
-                        placeholder={placeholder}
-                        onChangeText={text => setValue(text)}
-                        underlineColorAndroid={'#0c5aad'} />
+                    {
+                        hidePromptField ||
+                        <TextInput
+                            style={styles.prompt}
+                            defaultValue={defaultValue}
+                            placeholder={placeholder}
+                            onChangeText={text => setValue(text)}
+                            underlineColorAndroid={'#0c5aad'} />
+                    }
                     <BtnGrp buttons={buttons} onValueAsked={onValueAsked} />
                 </View>
             </TouchableOpacity>
