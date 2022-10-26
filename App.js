@@ -34,8 +34,25 @@ function App() {
 export default App;
 
 /*
-Issues: StopWatch implementation uses too much CPU,
+Issues:
+When renaming list of 'Date X' to 'Date Y' which already exists in database
+Expected: error is shown, and no action is performed
+What happens: 'Date X's list is saved at 'Date Y', so list of 'Date Y' is lost
+'Date X' becomes an empty list
+
+Support different themes, and theme changing
+
+StopWatch implementation uses too much CPU,
 due to repeated deep renders on each update (100ms on 'precise' mode)
 Soltuion maybe to keep state update only to the component,
-and derive some other way to pass back info
+and derive some other way to pass back info.
+
+Select Exercise (Dropdown) on clicked first time, change of dropdown
+position is very noticeable. Fix it
+
+@RunScreen On cancel/save/backpress, if no changes are made, dont prompt.
+
+Option to Save database in JSON, or load from JSON file (backup file)
+full, or selected months.
+Dedicated loader UI with conflict solver
 */
