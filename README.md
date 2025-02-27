@@ -62,9 +62,6 @@ The project was built using React Native and Expo, allowing for rapid developmen
   <img src="screenshots/screenshot%20(3).jpeg" style="width:200px"/>&nbsp;&nbsp;
   <img src="screenshots/screenshot%20(8).jpeg" style="width:200px"/>&nbsp;&nbsp;
   <img src="screenshots/screenshot%20(6).jpeg" style="width:200px"/>&nbsp;&nbsp;
-</div>
-&nbsp;
-<div style="display:flex; flex-direction:row">
   <img src="screenshots/screenshot%20(1).jpeg" style="width:200px"/>&nbsp;&nbsp;
   <img src="screenshots/screenshot%20(4).jpeg" style="width:200px"/>&nbsp;&nbsp;
   <img src="screenshots/screenshot%20(5).jpeg" style="width:200px"/>&nbsp;&nbsp;
