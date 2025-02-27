@@ -11,12 +11,18 @@
 - [Introduction](#introduction)
 - [Project Overview](#project-overview)
 - [Competition Details](#competition-details)
+- [Screenshots](#screenshots)
 - [Key Features](#key-features)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
 - [Tech Stack](#tech-stack)
 - [Learnings & Challenges](#learnings--challenges)
-- [Screenshots](#screenshots)
+- [Download Link](#download-link)
+- [Youtube Showcase Video](#youtube-showcase-video)
+- [Competition Website & Certificate](#competition-website--certificate)
 - [Future Improvements](#future-improvements)
 - [Acknowledgements](#acknowledgements)
+- [License](#license)
 
 ---
 
@@ -50,27 +56,87 @@ The project was built using React Native and Expo, allowing for rapid developmen
 
 ---
 
-## Key Features
-
-- **Real-Time Workout Logging:**  
-  - Start and stop timers to track your overall workout duration and active work time.
-  - Record detailed workout data including exercise names, rep counts, and custom notes.
-  
-- **Adjustable Stopwatch Interval:**  
-  - Users can choose the stopwatch update frequency (0.1s, 0.5s, or 1.0s) to accommodate performance on lower-end devices.
-  
-- **Custom Exercise Options:**  
-  - Add and manage custom exercises beyond the pre-defined list, tailoring the app to your personal fitness routine.
-  
-- **Comprehensive History Management:**  
-  - View past workout sessions organized by date.
-  - Edit, rename, or delete session data to keep your workout history up-to-date.
-  
-- **Intuitive & Responsive UI:**  
-  - Clean interface with animated checkboxes, interactive dropdown menus, and prompts for editing.
-  - Designed to provide a seamless user experience on both high-end and low-end devices.
+## Screenshots
+<div style="display:flex; flex-direction:row">
+  <img src="screenshots/screenshot%20(2).jpeg" style="width:200px"/>&nbsp;&nbsp;
+  <img src="screenshots/screenshot%20(3).jpeg" style="width:200px"/>&nbsp;&nbsp;
+  <img src="screenshots/screenshot%20(8).jpeg" style="width:200px"/>&nbsp;&nbsp;
+  <img src="screenshots/screenshot%20(6).jpeg" style="width:200px"/>&nbsp;&nbsp;
+</div>
+&nbsp;
+<div style="display:flex; flex-direction:row">
+  <img src="screenshots/screenshot%20(1).jpeg" style="width:200px"/>&nbsp;&nbsp;
+  <img src="screenshots/screenshot%20(4).jpeg" style="width:200px"/>&nbsp;&nbsp;
+  <img src="screenshots/screenshot%20(5).jpeg" style="width:200px"/>&nbsp;&nbsp;
+  <img src="screenshots/screenshot%20(7).jpeg" style="width:200px"/>&nbsp;&nbsp;
+</div>
 
 ---
+
+## Key Features
+
+- **Workout Session Logging:**  
+  - Record exercise details including the exercise name, start time, total duration, work duration, rep counts, and custom notes.
+  - Toggle the visibility of total and work times.
+
+- **Real-Time Stopwatch:**  
+  - Built-in stopwatch to accurately time your workouts.
+  - **Adjustable Update Interval:** Users can choose the stopwatch update interval (0.1s, 0.5s, or 1.0s) to balance precision and performance—particularly beneficial for low-end devices.
+
+- **Custom Exercises:**  
+  - Option to add custom exercises, so you're not limited to pre-defined workout types.
+
+- **History Management:**  
+  - View and manage your workout history by date.
+  - Edit, rename, or delete past sessions.
+
+- **User-Friendly Interface:**  
+  - Clean, interactive UI with components like dropdown selectors, prompts for editing data, and animated checkboxes.
+  - Responsive design ensuring smooth performance on a variety of devices.
+
+---
+
+## Usage
+
+Once the app is running:
+
+- **Home Screen:**  
+  View today's workout sessions. You can select a session to edit or delete, or add a new session.
+
+- **Run Screen:**  
+  - Start a new workout by selecting an exercise from a dropdown.
+  - Control timers (Total and Work time) with a built-in stopwatch.
+  - Input optional rep counts and notes.
+  - **Custom Features:**  
+    - **Add Custom Exercises:** If the exercise you want isn’t listed, you can add a custom one.
+    - **Adjust Stopwatch Interval:** Choose between 0.1s, 0.5s, and 1.0s update intervals in the settings (or a dedicated prompt) if your device struggles with high-frequency updates.
+
+- **History Screen:**  
+  Review previous workout sessions organized by date. You can tap on any date to view the detailed sessions for that day.
+
+---
+
+## Project Structure
+
+```
+/src
+  /components
+    - TaskComp.js         // Component for rendering a single task
+    - StopWatch.js        // Stopwatch component for timing workouts
+    - Dropdown.js         // Custom dropdown component for exercise selection
+    - Prompt.js           // Component for modal prompts (e.g., editing dates/times)
+    ...
+  /Utils
+    - index.js            // Utility functions for date/time formatting, parsing, and task creation
+  /screens
+    - HomeScreen.js       // Main screen for displaying daily workout sessions
+    - RunScreen.js        // Screen for starting/recording a workout session
+    - HistoryScreen.js    // Screen for viewing workout history
+  App.js                  // Main application entry point
+```
+
+---
+
 
 ## Tech Stack
 
@@ -108,16 +174,25 @@ Building **Fitness Tracker** was a rewarding experience, especially as my first 
 
 ---
 
-## Screenshots
+## Download Link
 
-![Home Screen](./screenshots/home-screen.png)
-*Home Screen – View today's workouts and navigate to individual sessions.*
+You can download the **Fitness Tracker** app directly from the following link:  
+[Download Fitness Tracker](https://fitness-tracker.en.uptodown.com/android)
 
-![Run Screen](./screenshots/run-screen.png)
-*Run Screen – Start a workout, select an exercise, and control timers.*
+---
 
-![History Screen](./screenshots/history-screen.png)
-*History Screen – Review past workout sessions by date.*
+## YouTube Showcase Video
+
+Watch our detailed showcase video on YouTube to see the app in action:  
+[Watch on YouTube](https://youtu.be/ldXkOVi7VZE)
+
+---
+
+## Competition Website & Certificate
+
+Learn more about the **IIT Guwahati Alcheringa Junior Code Champs** competition and view my certificate:  
+- [Junior Code Champs Official Website](https://www.codingal.com/competitions/iit-guwahati-junior-code-champs/)  
+- [View My Certificate](https://certificate.givemycertificate.com/c/ef3e5294-c872-47c8-a7ab-385ca42c26c5)
 
 ---
 
@@ -144,8 +219,26 @@ Building **Fitness Tracker** was a rewarding experience, especially as my first 
 - **React Native & Expo Communities:**  
   For their invaluable resources, libraries, and support that made this project possible.
 - **Contributors & Mentors:**  
-  Special thanks to everyone who provided feedback and guidance during the development process.
+  Special thanks to everyone who provided feedback and guidance during the development process.  
+- All contributors and users who help improve this project.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
 **Fitness Tracker** is a testament to my growth as a developer and my passion for combining technology with fitness. I hope it inspires others to pursue their ideas and create innovative solutions.
+
+
+
+
+
+
+
+
+
+
+
